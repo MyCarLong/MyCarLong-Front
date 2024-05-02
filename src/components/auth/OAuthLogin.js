@@ -82,10 +82,14 @@ const OAuthLogin = () => {
       window.location.href = `http://localhost:8080/oauth/kakao`;
     } else if(provider=='google'){
 <<<<<<< HEAD
+<<<<<<< HEAD
       window.location.href = `http://localhost:8080/oauth/google`; 
 =======
       window.location.href = ``; 
 >>>>>>> e425f9f (save)
+=======
+      window.location.href = `http://localhost:8080/oauth/google`; 
+>>>>>>> 00a0ef2 (Google Login test)
     } else if(provider=='naver'){
       window.location.href = `http://localhost:8080/oauth/naver`;
     }
