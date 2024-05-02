@@ -18,6 +18,7 @@ import Start from './components/start/Start';
 import Vehicle from './components/vehicles/Vehicle'; 
 import KakaoRedirectPage from "./components/auth/KakaoRedirectPage";
 import NaverRedirectPage from "./components/auth/NaverRedirectPage";
+import GoogleRedirectPage from "./components/auth/GoogleRedirectPage";
 
 function App() {
   const [loading, setLoading] = useState(true); 
@@ -48,6 +49,7 @@ function App() {
             <Route path="/nearby" element={<Nearby />} />
             <Route path= "/oauth/redirected/kakao" element={<KakaoRedirectPage />}/>
             <Route path= "/oauth/redirected/naver" element={<NaverRedirectPage />}/>
+            <Route path= "/oauth/redirected/google" element={<GoogleRedirectPage />}/>
             <Route path="/chatapp" element={<PrivateRoute element={<ChatApp />} isAuthenticated={isAuthenticated} />} />
             <Route path="/vehicles" element={<PrivateRoute element={<Vehicle />} isAuthenticated={isAuthenticated} />} />
             <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />} />
