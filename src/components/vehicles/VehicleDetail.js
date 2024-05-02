@@ -104,6 +104,8 @@ function VehicleDetail() {
     const [error, setError] = useState('');
 
     const handleSearch = async (event) => {
+<<<<<<< HEAD
+<<<<<<< HEAD
       event.preventDefault();
       setError('');
       try {
@@ -115,6 +117,24 @@ function VehicleDetail() {
       }
     };
   
+=======
+=======
+>>>>>>> e425f9f (save)
+        event.preventDefault();
+        setError('');
+        try {
+            const response = await axios.post('http://localhost:5000/api/vehicle', { model, year });
+            setVehicle(response.data);
+        } catch (error) {
+            console.error('Error fetching vehicle data:', error);
+            setError('Failed to fetch data. Please try again.');
+        }
+    };
+
+<<<<<<< HEAD
+>>>>>>> e425f9f (save)
+=======
+>>>>>>> e425f9f (save)
     return (
         <Container>
             <ContentArea>
@@ -122,7 +142,15 @@ function VehicleDetail() {
                     <InputSection>
                         <Input type="text" placeholder="Model" value={model} onChange={e => setModel(e.target.value)} />
                         <Input type="text" placeholder="Year" value={year} onChange={e => setYear(e.target.value)} />
+<<<<<<< HEAD
+<<<<<<< HEAD
                         <Button type="submit">조회</Button> 
+=======
+                        <Button type="submit">Search</Button> 
+>>>>>>> e425f9f (save)
+=======
+                        <Button type="submit">Search</Button> 
+>>>>>>> e425f9f (save)
                         {error && <p>{error}</p>}
                     </InputSection>
                 </form>

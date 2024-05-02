@@ -78,7 +78,18 @@ const Container = styled.div`
 
 const OAuthLogin = () => {
   const handleLogin = (provider) => {
-    window.location.href = `http://localhost:8092/auth/${provider}`;
+    if(provider=='kakao'){
+      window.location.href = `http://localhost:8080/oauth/kakao`;
+    } else if(provider=='google'){
+<<<<<<< HEAD
+      window.location.href = `http://localhost:8080/oauth/google`; 
+=======
+      window.location.href = ``; 
+>>>>>>> e425f9f (save)
+    } else if(provider=='naver'){
+      window.location.href = `http://localhost:8080/oauth/naver`;
+    }
+    
   };
 
   return (
@@ -90,11 +101,12 @@ const OAuthLogin = () => {
       <KakaoButton onClick={() => handleLogin('kakao')}>
         <img src="/images/kakao_login_large_narrow.png" alt="Kakao login" />
       </KakaoButton>
-      <NaverButton onClick={() => handleLogin('kakao')}>
-        <img src="/images/btnW_official.png" alt="Kakao login" />
+      <NaverButton onClick={() => handleLogin('naver')}>
+        <img src="/images/btnW_official.png" alt="Naver login" />
       </NaverButton>
     </Container>
   );
 };
 
 export default OAuthLogin;
+
