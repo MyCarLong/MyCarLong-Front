@@ -130,6 +130,8 @@ const Signup = () => {
       try {
         const response = await axios.post('http://localhost:8080/api/signup', userDetails); // Adjust the endpoint according to your backend route
         console.log("Signup successful!", response.data);
+        alert("회원가입이 완료되었습니다.");
+        navigate("/");
         // Additional logic after successful signup
       } catch (error) {
         console.error("Signup failed!", error.response.data);
