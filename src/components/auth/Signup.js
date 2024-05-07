@@ -64,8 +64,6 @@ const ErrorMsg = styled.span`
   font-size: 14px;
 `;
 
-import React, { useState, useRef } from 'react';
-import axios from 'axios';
 
 const Signup = () => {
   const [userDetails, setUserDetails] = useState({
@@ -130,7 +128,7 @@ const Signup = () => {
     
     if (validateForm()) {
       try {
-        const response = await axios.post('/api/signup', userDetails); // Adjust the endpoint according to your backend route
+        const response = await axios.post('http://localhost:8080/api/signup', userDetails); // Adjust the endpoint according to your backend route
         console.log("Signup successful!", response.data);
         // Additional logic after successful signup
       } catch (error) {
