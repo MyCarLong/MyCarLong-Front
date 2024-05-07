@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import OAuthLogin from './OAuthLogin';
+import axios from 'axios';
 
 const Container = styled.div`
   width: 100%;
@@ -63,6 +64,9 @@ const ErrorMsg = styled.span`
   font-size: 14px;
 `;
 
+import React, { useState, useRef } from 'react';
+import axios from 'axios';
+
 const Signup = () => {
   const [userDetails, setUserDetails] = useState({
     name: '',
@@ -72,8 +76,8 @@ const Signup = () => {
     contact: ''
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
   const formRef = useRef(null);
+  const navigate = useNavigate();  
 
   const handleClose = () => {
     navigate('/');
@@ -121,10 +125,18 @@ const Signup = () => {
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (validateForm()) {
-      console.log("User Details:", userDetails);
+      try {
+        const response = await axios.post('/api/signup', userDetails); // Adjust the endpoint according to your backend route
+        console.log("Signup successful!", response.data);
+        // Additional logic after successful signup
+      } catch (error) {
+        console.error("Signup failed!", error.response.data);
+        setError(error.response.data.message); // Assuming the backend sends error messages
+      }
     }
   };
 
