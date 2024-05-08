@@ -88,28 +88,27 @@ const Login = () => {
   };
 
   const handleSubmit = async () => {
-    // 이벤트 객체 대신 직접 유효성 검사와 로그인 처리를 수행합니다.
     if (validateForm()) {
       try {
         const response = await axios.post('http://localhost:8080/api/login', { email, password });
         console.log('Login response:', response); // 응답 확인
-        if (response.status === 200) { // 성공적인 응답 확인
+        if (response.status === 200) {
           console.log('Login successful!', response.data);
-          // 로그인이 성공하면 사용자 이름을 설정하고, 로그인 상태를 업데이트합니다.
           setUserName(response.data.name);
-          console.log(response.data.name);
-          alert("반갑습니다 " + response.data.name + "님.");
-          setIsLoggedIn(true); // 로그인 성공 시 상태를 true로 변경합니다.
-          localStorage.setItem('isLoggedIn', 'true'); // 로컬 스토리지에 로그인 상태 저장
+          setIsLoggedIn(true);
+          alert("반갑습니다 " + response.data.name + "님");
+          localStorage.setItem('isLoggedIn', 'true');
+
+          // 새로운 토큰을 받아와서 로컬 스토리지에 저장합니다.
+          localStorage.setItem('token', response.data.token);
+
           handleClose();
           handleLoginSuccess(); // 로그인 성공 후 페이지 새로고침
         } else {
-          // 서버에서 다른 응답을 보낼 경우 처리
           console.error('Login failed!', response.data);
           setError("이메일이나 비밀번호가 일치하지 않습니다.");
         }
       } catch (error) {
-        // 서버로부터 에러 응답을 받은 경우 처리
         console.error('Login failed!', error.response.data);
         setError("이메일이나 비밀번호가 일치하지 않습니다.");
       }
@@ -133,13 +132,12 @@ const Login = () => {
   }, [navigate]);
 
   const handleLoginClick = async (e) => {
-    // 로그인 버튼 클릭 시 호출되는 함수
     e.preventDefault(); 
-    handleSubmit(); // handleSubmit 함수 호출
+    handleSubmit();
   };
 
   const handleLoginSuccess = () => {
-    window.location.reload(); // 페이지 새로고침
+    window.location.reload();
   };
 
   return (
@@ -150,7 +148,7 @@ const Login = () => {
         <Input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         {error && <ErrorMsg>{error}</ErrorMsg>}
-        <Button type="submit" onClick={handleLoginClick}>Log In</Button> {/* type="submit" 추가 */}
+        <Button type="submit" onClick={handleLoginClick}>Log In</Button>
       </LoginForm>
       <OAuthLogin />
     </LoginContainer>

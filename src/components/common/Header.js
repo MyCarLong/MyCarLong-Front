@@ -69,6 +69,7 @@ const Header = () => {
     // 로그아웃 처리 및 로컬 스토리지 업데이트
     setIsLoggedIn(false);
     localStorage.setItem('isLoggedIn', 'false');
+    localStorage.removeItem('token')
     console.log('로그아웃됨');
   };
 

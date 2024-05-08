@@ -128,17 +128,20 @@ const Signup = () => {
     
     if (validateForm()) {
       try {
-        const response = await axios.post('http://localhost:8080/api/signup', userDetails); // Adjust the endpoint according to your backend route
+        const response = await axios.post('http://localhost:8080/api/signup', userDetails);
         console.log("Signup successful!", response.data);
+
+        // 회원가입 성공 시 서버로부터 받은 토큰을 로컬 스토리지에 저장
+        localStorage.setItem('token', response.data.token);
+        
         alert("회원가입이 완료되었습니다.");
         navigate("/");
-        // Additional logic after successful signup
       } catch (error) {
         console.error("Signup failed!", error.response.data);
         if (error.response.status === 400 && error.response.data === '중복된 이메일입니다.') {
           setError('중복된 이메일입니다.');
         } else {
-          setError('중복된 이메일입니다.');
+          setError('회원가입에 실패했습니다.');
         }
       }
     }
