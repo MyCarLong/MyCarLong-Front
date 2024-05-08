@@ -78,10 +78,10 @@ const MyPage = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     name: '하동원',
-    email: 'dongwon.ha@naver.com',
+    email: 'dd2558@naver.com',
     contact: '010-1234-5678',
-    password: '',
-    confirmPassword: ''
+    password: 'gkehddnjs10',
+    confirmPassword: 'gkehddnjs10'
   });
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');

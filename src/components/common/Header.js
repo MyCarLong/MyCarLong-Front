@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -55,25 +55,28 @@ const NavLinks = styled.div`
 `;
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const simulateLogin = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true); 
-      }, 1000); 
-    });
+  useEffect(() => {
+    // 페이지 로드 시 로컬 스토리지에서 로그인 상태 확인
+    const loggedIn = localStorage.getItem('isLoggedIn');
+    if (loggedIn === 'true') {
+      setIsLoggedIn(true);
+    }
+  }, [isLoggedIn]); // isLoggedIn 상태가 변경될 때마다 useEffect가 실행되도록 변경
+
+  const handleLogoutClick = () => {
+    // 로그아웃 처리 및 로컬 스토리지 업데이트
+    setIsLoggedIn(false);
+    localStorage.setItem('isLoggedIn', 'false');
+    console.log('로그아웃됨');
   };
 
   const handleLoginClick = async () => {
-    const result = await simulateLogin(); 
-    if (result) {
-      setIsLoggedIn(true); 
-    }
-  };
-
-  const handleLogoutClick = () => {
-    setIsLoggedIn(false); 
+    // 로그인 버튼 클릭 시 로그인 처리 후 로그인 상태 변경
+    // 로그인 성공 여부는 여기에서 처리하지 않습니다.
+    // 성공한 경우에만 로그인 상태를 변경하도록 handleSubmit 함수에서 처리합니다.
+    console.log('로그인됨');
   };
 
   return (

@@ -135,7 +135,11 @@ const Signup = () => {
         // Additional logic after successful signup
       } catch (error) {
         console.error("Signup failed!", error.response.data);
-        setError(error.response.data.message); // Assuming the backend sends error messages
+        if (error.response.status === 400 && error.response.data === '중복된 이메일입니다.') {
+          setError('중복된 이메일입니다.');
+        } else {
+          setError('중복된 이메일입니다.');
+        }
       }
     }
   };

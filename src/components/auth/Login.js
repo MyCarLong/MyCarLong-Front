@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import OAuthLogin from './OAuthLogin';
+import axios from 'axios';
 
 const LoginContainer = styled.div`
   width: 100%;
@@ -69,6 +70,8 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 사용자 로그인 여부
+  const [userName, setUserName] = useState(''); // 사용자 이름
 
   const validateForm = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -84,13 +87,35 @@ const Login = () => {
     return true;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    // 이벤트 객체 대신 직접 유효성 검사와 로그인 처리를 수행합니다.
     if (validateForm()) {
-      console.log('Form is valid');
+      try {
+        const response = await axios.post('http://localhost:8080/api/login', { email, password });
+        console.log('Login response:', response); // 응답 확인
+        if (response.status === 200) { // 성공적인 응답 확인
+          console.log('Login successful!', response.data);
+          // 로그인이 성공하면 사용자 이름을 설정하고, 로그인 상태를 업데이트합니다.
+          setUserName(response.data.name);
+          console.log(response.data.name);
+          alert("반갑습니다 " + response.data.name + "님.");
+          setIsLoggedIn(true); // 로그인 성공 시 상태를 true로 변경합니다.
+          localStorage.setItem('isLoggedIn', 'true'); // 로컬 스토리지에 로그인 상태 저장
+          handleClose();
+          handleLoginSuccess(); // 로그인 성공 후 페이지 새로고침
+        } else {
+          // 서버에서 다른 응답을 보낼 경우 처리
+          console.error('Login failed!', response.data);
+          setError("이메일이나 비밀번호가 일치하지 않습니다.");
+        }
+      } catch (error) {
+        // 서버로부터 에러 응답을 받은 경우 처리
+        console.error('Login failed!', error.response.data);
+        setError("이메일이나 비밀번호가 일치하지 않습니다.");
+      }
     }
   };
-
+  
   const handleClose = () => {
     navigate('/');
   };
@@ -98,15 +123,24 @@ const Login = () => {
   useEffect(() => {
     function handleClickOutside(event) {
       if (loginRef.current && !loginRef.current.contains(event.target)) {
-        navigate('/'); 
+        navigate('/');
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [navigate]); 
-  
+  }, [navigate]);
+
+  const handleLoginClick = async (e) => {
+    // 로그인 버튼 클릭 시 호출되는 함수
+    e.preventDefault(); 
+    handleSubmit(); // handleSubmit 함수 호출
+  };
+
+  const handleLoginSuccess = () => {
+    window.location.reload(); // 페이지 새로고침
+  };
 
   return (
     <LoginContainer ref={loginRef}>
@@ -116,7 +150,7 @@ const Login = () => {
         <Input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         {error && <ErrorMsg>{error}</ErrorMsg>}
-        <Button type="submit">Log In</Button>
+        <Button type="submit" onClick={handleLoginClick}>Log In</Button> {/* type="submit" 추가 */}
       </LoginForm>
       <OAuthLogin />
     </LoginContainer>
