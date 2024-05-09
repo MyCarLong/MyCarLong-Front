@@ -12,9 +12,10 @@ const GoogleRedirectPage = () => {
             const response = await axios.get(`http://localhost:8080/oauth/login/google?code=${code}`);
             // 응답 데이터에서 성공 여부 확인
             if (response.status === 200) {
-                // 로그인 성공 시 토큰을 스토리지에 저장
-                // 여기서 토큰을 저장하는 로직 추가
-                alert("로그인 되었습니다");
+                localStorage.setItem("provider","google")
+                localStorage.setItem("isLoggedIn","true")
+                localStorage.setItem("userRole","ROLE_USER");
+                alert("구글 로그인을 완료했습니다.");
                 navigate("/success");
             } else {
                 alert("로그인 실패");

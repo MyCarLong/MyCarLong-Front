@@ -20,6 +20,8 @@ import KakaoRedirectPage from "./components/auth/KakaoRedirectPage";
 import NaverRedirectPage from "./components/auth/NaverRedirectPage";
 import GoogleRedirectPage from "./components/auth/GoogleRedirectPage";
 
+
+
 function App() {
   const [loading, setLoading] = useState(true); 
 
@@ -46,7 +48,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/aboutus" element={<Aboutus />} />
-            <Route path="/nearby" element={<Nearby />} />
+            <Route path="/nearby" element={<PrivateRoute element={<Nearby />} isAuthenticated={isAuthenticated} />} />
             <Route path= "/oauth/redirected/kakao" element={<KakaoRedirectPage />}/>
             <Route path= "/oauth/redirected/naver" element={<NaverRedirectPage />}/>
             <Route path= "/oauth/redirected/google" element={<GoogleRedirectPage />}/>

@@ -98,6 +98,8 @@ const Login = () => {
           setIsLoggedIn(true);
           alert("반갑습니다 " + response.data.name + "님");
           localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('provider','BASIC_USER');
+          localStorage.setItem('userRole','ROLE_USER');
 
           // 새로운 토큰을 받아와서 로컬 스토리지에 저장합니다.
           localStorage.setItem('token', response.data.token);
