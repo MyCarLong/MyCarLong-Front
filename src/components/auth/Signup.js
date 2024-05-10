@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import OAuthLogin from './OAuthLogin';
+import axios from 'axios';
 
 const Container = styled.div`
   width: 100%;
@@ -63,6 +64,7 @@ const ErrorMsg = styled.span`
   font-size: 14px;
 `;
 
+
 const Signup = () => {
   const [userDetails, setUserDetails] = useState({
     name: '',
@@ -72,8 +74,8 @@ const Signup = () => {
     contact: ''
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
   const formRef = useRef(null);
+  const navigate = useNavigate();  
 
   const handleClose = () => {
     navigate('/');
@@ -121,10 +123,27 @@ const Signup = () => {
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (validateForm()) {
-      console.log("User Details:", userDetails);
+      try {
+        const response = await axios.post('http://localhost:8080/api/signup', userDetails);
+        console.log("Signup successful!", response.data);
+
+        // 회원가입 성공 시 서버로부터 받은 토큰을 로컬 스토리지에 저장
+        localStorage.setItem('token', response.data.token);
+        
+        alert("회원가입이 완료되었습니다.");
+        navigate("/");
+      } catch (error) {
+        console.error("Signup failed!", error.response.data);
+        if (error.response.status === 400 && error.response.data === '중복된 이메일입니다.') {
+          setError('중복된 이메일입니다.');
+        } else {
+          setError('회원가입에 실패했습니다.');
+        }
+      }
     }
   };
 

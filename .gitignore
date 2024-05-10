@@ -22,3 +22,11 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# api key   
+<<<<<<< HEAD
+oauthkey.properties
+mycarlong-back/
+=======
+oauthkey.properties
+>>>>>>> e425f9f (save)

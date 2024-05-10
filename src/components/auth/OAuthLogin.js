@@ -75,7 +75,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
 `;
-
 const OAuthLogin = () => {
   const handleLogin = (provider) => {
     window.location.href = `http://localhost:8092/auth/${provider}`;
@@ -98,3 +97,4 @@ const OAuthLogin = () => {
 };
 
 export default OAuthLogin;
+

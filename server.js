@@ -1,3 +1,5 @@
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
 const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
@@ -53,6 +55,7 @@ app.post("/api/chat", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 app.post("/api/vehicle", async (req, res) => {
   const { model, year } = req.body;
