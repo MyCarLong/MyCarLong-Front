@@ -1,22 +1,11 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+
 const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
 const fetch = require("node-fetch");
 const cors = require("cors");
-=======
-=======
->>>>>>> e425f9f (save)
-require('dotenv').config();
-const express = require('express');
-const fetch = require('node-fetch');
-const cors = require('cors');
-<<<<<<< HEAD
->>>>>>> e425f9f (save)
-=======
->>>>>>> e425f9f (save)
+const { GoogleAuth } = require("google-auth-library");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,219 +13,164 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-app.post('/api/chat', async (req, res) => {
+app.post("/api/chat", async (req, res) => {
   const { text } = req.body;
-  console.log('Received text from frontend:', text);
+  console.log("Received text from frontend:", text);
 
   try {
     const gptApiKey = process.env.GPT_API_KEY;
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${gptApiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4',
+        model: "gpt-4",
         messages: [
-          { role: 'system', content: 'This assistant searches for topics related to cars and understands Korean.' },
-          { role: 'user', content: text },
+          {
+            role: "system",
+            content:
+              "This assistant searches for topics related to cars and understands Korean.",
+          },
+          { role: "user", content: text },
         ],
         max_tokens: 200,
       }),
     });
 
     if (!response.ok) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-      throw new Error(`Failed to get response from GPT API: ${response.status} - ${response.statusText}`);
-=======
-      throw new Error('Failed to get response from GPT API');
->>>>>>> e425f9f (save)
-=======
-      throw new Error('Failed to get response from GPT API');
->>>>>>> e425f9f (save)
+      throw new Error(
+        `Failed to get response from GPT API: ${response.status} - ${response.statusText}`
+      );
     }
 
     const responseData = await response.json();
     const gptMessage = responseData.choices[0].message;
-    console.log('Message from OpenAI:', gptMessage);
+    console.log("Message from OpenAI:", gptMessage);
 
     res.json({ message: gptMessage.content });
   } catch (error) {
-    console.error('Error during GPT API request:', error);
+    console.error("Error during GPT API request:", error);
     res.status(500).json({ error: error.message });
   }
 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 app.post("/api/vehicle", async (req, res) => {
-=======
-app.post('/api/vehicle', async (req, res) => {
->>>>>>> e425f9f (save)
-=======
-app.post('/api/vehicle', async (req, res) => {
->>>>>>> e425f9f (save)
   const { model, year } = req.body;
-  console.log(`Vehicle model and year requested: ${model} ${year}`);
+  console.log(`Vehicle model and year request: ${model} ${year}`);
+
+  if (!model || !year) {
+    return res.status(400).json({ error: "Both model and year are required." });
+  }
+
+  let statusCode = 500;
 
   try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    const REGION = "asia-northeast3";
+    const REGION = "asia-northeast3"; // 실제 배포 지역으로 업데이트
     const PROJECT_ID = "focal-time-421105";
-    const MODEL_NAME = "gemini-1.5-pro";
-    const API_KEY = process.env.GENERATIVE_AI_API_KEY;
+    const MODEL_NAME = "gemini-1.5-pro-preview-0409";
+    const auth = new GoogleAuth({
+      scopes: 'https://www.googleapis.com/auth/cloud-platform'
+    });
 
+    // 확인된 엔드포인트 URL 구조는 Vertex AI 문서 참조
     const apiUrl = `https://${REGION}-aiplatform.googleapis.com/v1/projects/${PROJECT_ID}/locations/${REGION}/publishers/google/models/${MODEL_NAME}:streamGenerateContent`;
 
-    console.log("Requesting Vertex AI...");
+    console.log("Vertex AI 요청...");
+    const client = await auth.getClient();
+    const accessToken = await client.getAccessToken();
 
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
+        Authorization: `Bearer ${accessToken.token}`
       },
       body: JSON.stringify({
-        instances: [
-          {
-            contents: [
-              {
-                role: "user",
-                parts: [
-                  {
-                    text: `${year}년 ${model} 차량 정보`,
-                  },
-                ],
-              },
-            ],
-            systemInstruction: {
-              role: "assistant",
-              parts: [
-                {
-                  text: "This assistant searches for topics related to cars and understands Korean.",
-                },
-              ],
-            },
-            generationConfig: {
-              temperature: 0.8,
-              topP: 1,
-              topK: 50,
-              candidateCount: 10,
-              maxOutputTokens: 200,
-              stopSequences: ["\n"],
-              responseMimeType: "text/plain",
-            },
-          },
-        ],
+        contents: [{
+          role: "user",
+          parts: [{ text: `${year}년식 ${model} 차량 정보` }]
+        }],
+        systemInstruction: {
+          role: "assistant",
+          parts: [{
+            text: "사용자가 입력한 차량 연식과 모델에 따른 차량 제원(차량설명, 가격, 연료, 연비, 제조사, 차종, 안전 등급을 포함하여 기타 자동차 제원을 최대한 자세하게)을 키와 값 형식으로 한국어로 응답."
+          }]
+        },
+        generationConfig: {
+          temperature: 0.1,
+          topP: 1,
+          topK: 10,
+          candidateCount: 1,
+          maxOutputTokens: 2048,
+          stopSequences: [],
+          responseMimeType: "application/json",
+        }
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`Vertex AI response failure: ${response.status} - ${response.statusText}`);
+      statusCode = response.status;
+      const errorText = await response.text();
+      throw new Error(`Vertex AI 응답 실패: ${statusCode} - ${response.statusText}, 본문: ${errorText}`);
     }
 
-    const textResponse = await response.text();
-    console.log("Response text:", textResponse);
-    const responseData = JSON.parse(textResponse);
-    const predictions = responseData.predictions[0].outputs.text;
-    const vehicleInfo = parseCarInfo(predictions);
-    console.log("Parsed vehicle information:", vehicleInfo);
-    res.json(vehicleInfo);
-  } catch (error) {
-    console.error("Error during Vertex AI request:", error);
-=======
-=======
->>>>>>> e425f9f (save)
-    const vertexApiKey = process.env.VERTEX_API_KEY;
-    const apiUrl = 'https://asia-northeast3-aiplatform.googleapis.com/v1/projects/focal-time-421105/locations/asia-northeast3/publishers/google/models/gemini-1.5-pro:streamGenerateContent';
+    console.log("Vertex AI 응답 받음");
+    const responseData = await response.json();
+    console.log("파싱된 응답 데이터:", JSON.stringify(responseData, null, 2));
 
-    const requestBody = {
-      inputs: {
-        text: `${year}년 ${model} 차량 정보`
-      }
-    };
-
-    console.log('Sending request to Vertex AI...');
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${vertexApiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
-    });
-
-    if (!response.ok) {
-      throw new Error(`Vertex AI response failed: ${response.status} - ${response.statusText}`);
+    const vehicleSpecs = parseVehicleSpecsFromResponse(responseData);
+    if (vehicleSpecs) {
+      res.json({ vehicleSpecs });
+    } else {
+      res.status(404).json({ error: "Vehicle specifications not found." });
     }
-
-    const textResponse = await response.text();
-    console.log('Response text:', textResponse);
-    const responseData = JSON.parse(textResponse);
-    const predictions = responseData.predictions[0].outputs.text;
-    const vehicleInfo = parseCarInfo(predictions);
-    console.log('Parsed vehicle info:', vehicleInfo);
-    res.json(vehicleInfo);
   } catch (error) {
-    console.error('Error during Vertex AI request:', error);
-<<<<<<< HEAD
->>>>>>> e425f9f (save)
-=======
->>>>>>> e425f9f (save)
-    res.status(500).json({ error: error.message });
+    console.error("Vertex AI 요청 중 오류 발생:", error);
+    res.status(statusCode).json({ error: error.message });
   }
 });
 
-function parseCarInfo(text) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  const regex = /((?:[가-힣]+\s*)+)\s*(\d{4})년형\s*(.*?)가격\s*(\d{1,8})원\s*(.*?)\s*엔진\s*(.*?)\s*변속기\s*(.*?)\s*연비\s*(.*?)/g;
-=======
-  const regex = /((?:[가-힣]+\s*)+)\s*(\d{4})\s*년형\s*(.*?)가격\s*(\d{1,8})원\s*(.*?)\s*엔진\s*(.*?)\s*변속기\s*(.*?)\s*연비\s*(.*?)/g;
->>>>>>> e425f9f (save)
-=======
-  const regex = /((?:[가-힣]+\s*)+)\s*(\d{4})\s*년형\s*(.*?)가격\s*(\d{1,8})원\s*(.*?)\s*엔진\s*(.*?)\s*변속기\s*(.*?)\s*연비\s*(.*?)/g;
->>>>>>> e425f9f (save)
-  const match = regex.exec(text);
-  if (match) {
-    return {
-      model: match[1].trim(),
-<<<<<<< HEAD
-<<<<<<< HEAD
-      year: parseInt(match[2]), 
-      price: parseInt(match[4].replace(/,/g, "")),
-      specs: {
-        engine: match[6].trim(),
-        transmission: match[7].trim(),
-        fuelEconomy: match[8].trim(),
-      },
-=======
-=======
->>>>>>> e425f9f (save)
-      price: parseInt(match[4].replace(/,/g, '')),
-      specs: {
-        engine: match[6].trim(),
-        transmission: match[7].trim(),
-        fuelEconomy: match[8].trim()
+function parseVehicleSpecsFromResponse(responseData) {
+  let specs = {};
+
+  responseData.forEach(data => {
+    const candidate = data.candidates[0]; // 후보 요소 중 첫 번째 요소 선택
+
+    // content.parts 배열을 합쳐서 하나의 텍스트로 만든다.
+    const contentText = candidate.content.parts.reduce((text, part) => text + part.text, "");
+    console.log(contentText); 
+    // 만약 contentText가 JSON 형식으로 시작하고 끝나지 않는다면,
+    if (contentText.startsWith('{') && contentText.endsWith('}')) {
+      try {
+        // JSON 형식일 경우 JSON으로 파싱하여 specs 객체에 병합한다.
+        const jsonContent = JSON.parse(contentText);
+        Object.assign(specs, jsonContent);
+
+      } catch (error) {
+        // JSON 파싱 에러 발생 시 콘솔에 로그 출력
+        console.error('Error parsing JSON:', error);
       }
-<<<<<<< HEAD
->>>>>>> e425f9f (save)
-=======
->>>>>>> e425f9f (save)
-    };
-  }
-  return null;
+    } else {
+      // JSON 형식이 아닌 경우 줄바꿈을 공백으로 대체하고 각 키-값 쌍을 추출하여 객체로 반환한다.
+      const keyValuePairs = contentText.split('\n').map(line => {
+        const [key, ...value] = line.split(':');
+        const trimmedKey = key.trim();
+        const trimmedValue = value.join(':').replace(/\n/g, " ").trim(); // 줄바꿈을 공백으로 대체하고 공백 제거
+        return trimmedKey && trimmedValue ? { [trimmedKey]: trimmedValue } : {};
+      });      
+      
+      // specs 객체에 추출된 키-값 쌍을 병합한다.
+      Object.assign(specs, ...keyValuePairs);
+    }
+  });
+
+  // 완성된 specs 객체 반환
+  console.log(specs);
+  return specs;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
-=======
-app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
->>>>>>> e425f9f (save)
-=======
-app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
->>>>>>> e425f9f (save)
+// 서버를 지정된 포트로 실행
+app.listen(PORT, () => console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`));

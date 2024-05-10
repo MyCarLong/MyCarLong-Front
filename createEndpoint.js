@@ -1,9 +1,5 @@
 console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
-/**
- * TODO(developer): Uncomment these variables before running the sample.\
- * (Not necessary if passing values as arguments)
- */
 
 const endpointDisplayName = 'create_endpoint';
 const project = 'focal-time-421105';
