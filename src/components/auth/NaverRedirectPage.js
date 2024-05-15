@@ -9,25 +9,27 @@ const NaverRedirectPage = () => {
 
     const handleOAuthNaver = async (code) => {
         try {
-            // 카카오로부터 받아온 code를 서버에 전달하여 카카오로 회원가입 & 로그인한다
-            const response = await axios.get(`http://localhost:8080/oauth/login/naver?code=${code}`);
+            const BASE_URL = process.env.REACT_APP_BASE_URL;
+            // 네이버로부터 받아온 code를 서버에 전달하여 네이버로 회원가입 & 로그인한다
+            const response = await axios.get(BASE_URL+ `/oauth/login/naver?code=${code}`);
             if(response.status === 200){
-                localStorage.setItem("provider","naver")
-                localStorage.setItem("isLoggedIn","true")
-                localStorage.setItem("userRole","ROLE_USER");
-                alert("네이버 로그인을 완료했습니다.");
+                sessionStorage.setItem("provider","naver")
+                sessionStorage.setItem("isLoggedIn","true")
+                sessionStorage.setItem("userRole","ROLE_USER");
                 navigate("/success");
-        } else {
+                window.location.reload();
+                alert("네이버 로그인을 완료했습니다.");
+            } else {
+                alert("로그인 실패");
+                navigate("/fail");
+            }
+        } catch (error) {
             alert("로그인 실패");
             navigate("/fail");
+        } finally {
+            setLoading(false); // 로딩 상태 변경
         }
-    } catch (error) {
-        alert("로그인 실패");
-        navigate("/fail");
-    } finally {
-        setLoading(false); // 로딩 상태 변경
-    }
-};
+    };
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);

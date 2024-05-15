@@ -111,10 +111,10 @@ const TableCell = styled.td`
   }
 `;
 
-function VehicleDetail() {
+function VehicleCard() {
     const [model, setModel] = useState('');
     const [year, setYear] = useState('');
-    const [vehicleDetails, setVehicleDetails] = useState(null);
+    const [VehicleCard, setVehicleCard] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -136,12 +136,14 @@ function VehicleDetail() {
         }
 
         setError('');
-        setVehicleDetails(null);
+        setVehicleCard(null);
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:5000/api/vehicle', {model, year});
+            const BASE_URL = process.env.REACT_APP_BASE_URL;
+            const response = await axios.get(BASE_URL+ `/car/info?model=${model}&year=${year}`);//, {model, year});
             if (response.data && response.status === 200) {
-                setVehicleDetails(response.data.vehicleSpecs);
+                // setVehicleCard(response.data);
+                console.log(response.data);
             } else {
                 setError('차량 정보를 찾을 수 없습니다. 입력 정보를 확인해 주세요.');
             }
@@ -155,25 +157,6 @@ function VehicleDetail() {
 
 
     function responsePaser(jsonString) {
-        // // 필요한 키
-        // var keys = ["차량설명", "가격", "연료", "연비", "제조사", "차종" , "안전 등급",
-        //     "엔진", "변속기", "변속기", "토크" , "전장" , "전폭" ,"전고", "축거", "공차중량" ,"승차인원"
-        //     ,"트렁크 용량", "서스펜션" , "브레이크", "타이어" , "주요 편의사양", "주요 안전사양"];
-        // jsonString = JSON.stringify(jsonString);
-        // // 정규식 패턴 (": " 뒤에 오는 값 추출)
-        // const pattern = /: "(.*?)"/g;
-        // // 추출된 값을 저장할 객체
-        // const extractedValues = {};
-        // // JSON 문자열 반복 처리
-        // for (const key of keys) {
-        //     const match = jsonString.match(pattern);
-        //     console.log(match);
-        //     if (match && match[1]) {
-        //         extractedValues[key] = match[1];
-        //     }
-        // }
-        // console.log(extractedValues);
-
 
         return (
             <Table>
@@ -217,16 +200,16 @@ function VehicleDetail() {
             {loading ? (
                 <LoadingContainer>
                     <BeatLoader color="#007bff" loading={loading}/>
-                    <LoadingText>AI가 정보를 가져오고 있어요.(3~10초)</LoadingText>
+                    <LoadingText>API가 정보를 가져오고 있어요.(3~10초)</LoadingText>
                 </LoadingContainer>
             ) : (
                 <>
                     {error && <AlertMessage>{error}</AlertMessage>}
-                    {vehicleDetails && responsePaser(vehicleDetails)}
+                    {VehicleCard && responsePaser(VehicleCard)}
                 </>
             )}
         </Container>
     );
 }
 
-export default VehicleDetail;
+export default VehicleCard;

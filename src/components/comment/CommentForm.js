@@ -94,7 +94,8 @@ const submitComment = async (text, file) => {
   formData.append('file', file);
 
   try {
-    const response = await axios.post('http://localhost:8092/api/comments', formData, {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    const response = await axios.post( BASE_URL + '/api/comments', formData, { //http://localhost:8092
       headers: {
         'Content-Type': 'multipart/form-data'
       }

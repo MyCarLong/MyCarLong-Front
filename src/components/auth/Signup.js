@@ -122,13 +122,14 @@ const Signup = () => {
     setError('');
     return true;
   };
-
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (validateForm()) {
       try {
-        const response = await axios.post('http://localhost:8080/api/signup', userDetails);
+        const response = await axios.post(BASE_URL+'/api/signup', userDetails);
+        //TODO: BASE_URL converting 작업
         console.log("Signup successful!", response.data);
 
         // 회원가입 성공 시 서버로부터 받은 토큰을 로컬 스토리지에 저장

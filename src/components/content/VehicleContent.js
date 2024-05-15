@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import VehicleDetail from '../vehicles/VehicleDetail';
+import VehicleCard from '../vehicles/VehicleCard';
 
 const StyledVehicleContent = styled.div`
   flex-grow: 1;
@@ -17,25 +18,26 @@ const Line = styled.hr`
 `;
 
 const VehicleContent = ({ activeNav }) => {
-  let content;
-  switch (activeNav) {
-    case '/vehicle':
-      content = <h1>모두의차고</h1>;
-      break;
-    case '/vehicledetail':
-      content = <h1>AI차량제원</h1>;
-      break;
-    default:
-      content = <h1>모두의차고</h1>; 
-  }
+    let content;
+    switch (activeNav) {
+        case '/vehicle':
+            content = <h1>모두의차고</h1>;
+            break;
+        case '/vehicledetail':
+            content = <h1>AI차량제원</h1>;
+            break;
+        default:
+            content = <h1>모두의차고</h1>;
+    }
 
-  return (
-    <StyledVehicleContent>
-      {content}
-      <Line />
-      {activeNav === '/vehicledetail' && <VehicleDetail />}
-    </StyledVehicleContent>
-  );
+    return (
+        <StyledVehicleContent>
+            {content}
+            <Line />
+            {activeNav === '/vehicledetail' && <VehicleDetail />}
+            {activeNav === '/vehicle' && <VehicleCard />}
+        </StyledVehicleContent>
+    );
 };
 
 export default VehicleContent;

@@ -96,7 +96,12 @@ app.post("/api/vehicle", async (req, res) => {
         systemInstruction: {
           role: "assistant",
           parts: [{
-            text: "사용자가 입력한 차량 연식과 모델에 따른 차량 제원(차량설명, 가격, 연료, 연비, 제조사, 차종, 안전 등급을 포함하여 기타 자동차 제원을 최대한 자세하게)을 키와 값 형식으로 한국어로 응답."
+            // text: "사용자가 입력한 차량 연식과 모델에 따른 차량 제원(차량설명, 가격, 연료, 연비, 제조사, 차종, 안전 등급을 포함하여 기타 자동차 제원을 최대한 자세하게)을 키와 값 형식으로 한국어로 응답."
+            text: "사용자가 입력한 차량 연식과 모델에 따른 차량 제원" +
+                "차량설명(간략한 한줄~두줄의 설명), 가격, 연료, 연비, 제조사, 차종, 안전 등급, 엔진, 변속기," +
+                " 토크, 전장, 전폭, 전고, 축거, 공차중량, 승차인원, 트렁크 용량, 서스펜션, 브레이크, 타이어, 주요 편의사양, 주요 안전사양"
+            + "항목으로 구분하여 키와 값 JSON형식으로 한국어로 응답."
+
           }]
         },
         generationConfig: {
@@ -121,7 +126,7 @@ app.post("/api/vehicle", async (req, res) => {
     const responseData = await response.json();
     console.log("파싱된 응답 데이터:", JSON.stringify(responseData, null, 2));
 
-    const vehicleSpecs = parseVehicleSpecsFromResponse(responseData);
+    const vehicleSpecs = parsingTest(responseData);
     if (vehicleSpecs) {
       res.json({ vehicleSpecs });
     } else {
@@ -133,6 +138,36 @@ app.post("/api/vehicle", async (req, res) => {
   }
 });
 
+function parsingTest(test) {
+  let jObj = {};
+  let jStr = "";
+
+  test.forEach(data =>{
+    const candidate = data.candidates[0];
+    console.log(candidate);
+    const contentText = candidate.content.parts.reduce((text, part) => text + part.text, "");
+    console.log("텍스트 합친다.: ",contentText , typeof contentText);
+    jStr = jStr.concat(""+contentText);
+    console.log("jStr : ", jStr);
+    if (jStr.startsWith('{') && jStr.endsWith('}')) {
+      try {
+        // JSON 형식일 경우 JSON으로 파싱하여 specs 객체에 병합한다.
+        const jsonContent = JSON.parse(jStr);
+        Object.assign(specs, jsonContent);
+
+      } catch (error) {
+        // JSON 파싱 에러 발생 시 콘솔에 로그 출력
+        console.error('Error parsing JSON:', error);
+      }
+    }
+
+  })
+  console.log("최종 jString -> JSON", JSON.parse(jStr) ," , 타입 :" , typeof (JSON.parse(jStr)))
+  const result = JSON.parse(jStr);
+  return result;
+}
+
+
 function parseVehicleSpecsFromResponse(responseData) {
   let specs = {};
 
@@ -141,7 +176,7 @@ function parseVehicleSpecsFromResponse(responseData) {
 
     // content.parts 배열을 합쳐서 하나의 텍스트로 만든다.
     const contentText = candidate.content.parts.reduce((text, part) => text + part.text, "");
-    console.log(contentText); 
+    console.log("텍스트 합친다.: ",contentText);
     // 만약 contentText가 JSON 형식으로 시작하고 끝나지 않는다면,
     if (contentText.startsWith('{') && contentText.endsWith('}')) {
       try {
@@ -168,7 +203,7 @@ function parseVehicleSpecsFromResponse(responseData) {
   });
 
   // 완성된 specs 객체 반환
-  console.log(specs);
+  console.log("스펙 : ",specs);
   return specs;
 }
 

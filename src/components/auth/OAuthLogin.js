@@ -75,9 +75,10 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
 `;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 const OAuthLogin = () => {
   const handleLogin = (provider) => {
-    window.location.href = `http://localhost:8092/auth/${provider}`;
+    window.location.href = BASE_URL+`/oauth/${provider}`;
   };
 
   return (

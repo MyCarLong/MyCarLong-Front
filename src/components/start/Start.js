@@ -28,9 +28,12 @@ function Start() {
         transition: 'opacity 2s ease-in-out', 
       }}
     >
-      <img src="./images/mycarlong_original.png" alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+        
+      <img src={`${process.env.PUBLIC_URL}/images/mycarlong_original.png`} alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+
     </div>
   );
 }
+//fixed public image path {/*<img src="./images/mycarlong_original.png" alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%' }} />*/}
 
 export default Start;

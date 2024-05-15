@@ -90,22 +90,21 @@ const Login = () => {
   const handleSubmit = async () => {
     if (validateForm()) {
       try {
-        const response = await axios.post('http://localhost:8080/api/login', { email, password });
+        const BASE_URL = process.env.REACT_APP_BASE_URL;
+        // 일반회원으로 로그인한다
+        const response = await axios.post(BASE_URL+ '/api/login', { email, password });
         console.log('Login response:', response); // 응답 확인
         if (response.status === 200) {
           console.log('Login successful!', response.data);
           setUserName(response.data.name);
-          setIsLoggedIn(true);
           alert("반갑습니다 " + response.data.name + "님");
-          localStorage.setItem('isLoggedIn', 'true');
-          localStorage.setItem('provider','BASIC_USER');
-          localStorage.setItem('userRole','ROLE_USER');
-
+          sessionStorage.setItem('isLoggedIn', 'true');
+          sessionStorage.setItem('provider','BASIC_USER');
+          sessionStorage.setItem('userRole','ROLE_USER');
           // 새로운 토큰을 받아와서 로컬 스토리지에 저장합니다.
-          localStorage.setItem('token', response.data.token);
-
+          sessionStorage.setItem('token', response.data.token);
           handleClose();
-          handleLoginSuccess(); // 로그인 성공 후 페이지 새로고침
+          window.location.reload();
         } else {
           console.error('Login failed!', response.data);
           setError("이메일이나 비밀번호가 일치하지 않습니다.");
@@ -116,7 +115,10 @@ const Login = () => {
       }
     }
   };
-  
+
+
+
+
   const handleClose = () => {
     navigate('/');
   };
@@ -134,26 +136,23 @@ const Login = () => {
   }, [navigate]);
 
   const handleLoginClick = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     handleSubmit();
   };
 
-  const handleLoginSuccess = () => {
-    window.location.reload();
-  };
 
   return (
-    <LoginContainer ref={loginRef}>
-      <CloseButton onClick={handleClose}>&times;</CloseButton>
-      <Title>Login</Title>
-      <LoginForm onSubmit={handleSubmit}>
-        <Input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        {error && <ErrorMsg>{error}</ErrorMsg>}
-        <Button type="submit" onClick={handleLoginClick}>Log In</Button>
-      </LoginForm>
-      <OAuthLogin />
-    </LoginContainer>
+      <LoginContainer ref={loginRef}>
+        <CloseButton onClick={handleClose}>&times;</CloseButton>
+        <Title>Login</Title>
+        <LoginForm onSubmit={handleSubmit}>
+          <Input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          {error && <ErrorMsg>{error}</ErrorMsg>}
+          <Button type="submit" onClick={handleLoginClick}>Log In</Button>
+        </LoginForm>
+        <OAuthLogin />
+      </LoginContainer>
   );
 };
 

@@ -9,14 +9,17 @@ const GoogleRedirectPage = () => {
 
     const handleOAuthGoogle = async (code) => {
         try {
-            const response = await axios.get(`http://localhost:8080/oauth/login/google?code=${code}`);
+            const BASE_URL = process.env.REACT_APP_BASE_URL;
+            // 구글로부터 받아온 code를 서버에 전달하여 구글로 회원가입 & 로그인한다
+            const response = await axios.get(BASE_URL+ `/oauth/login/google?code=${code}`);
             // 응답 데이터에서 성공 여부 확인
             if (response.status === 200) {
-                localStorage.setItem("provider","google")
-                localStorage.setItem("isLoggedIn","true")
-                localStorage.setItem("userRole","ROLE_USER");
-                alert("구글 로그인을 완료했습니다.");
+                sessionStorage.setItem("provider","google");
+                sessionStorage.setItem("isLoggedIn","true");
+                sessionStorage.setItem("userRole","ROLE_USER");
                 navigate("/success");
+                window.location.reload();
+                alert("구글 로그인을 완료했습니다.");
             } else {
                 alert("로그인 실패");
                 navigate("/fail");
