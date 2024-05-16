@@ -3,11 +3,12 @@ import { Navigate } from 'react-router-dom';
 
 const PrivateRoute = ({ element }) => {
   // 로컬 스토리지에서 로그인 상태와 사용자 역할을 가져옴
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-  const userRole = localStorage.getItem('userRole');
+  const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+  const userRole = sessionStorage.getItem('userRole');
+  const userNickname = sessionStorage.getItem('nickname');
 
   // 사용자가 로그인되어 있고 역할이 ROLE_USER인 경우에만 접근 허용
-  const isAuthenticated = isLoggedIn === 'true' && userRole === 'ROLE_USER';
+  const isAuthenticated = isLoggedIn === 'true' && userRole === 'ROLE_USER' && userNickname!== null;
 
   if (!isAuthenticated) {
     // 권한이 없는 경우에 로그인요청

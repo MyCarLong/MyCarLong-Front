@@ -1,115 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import {BeatLoader} from 'react-spinners';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background: #f0f0f0;
-  height: 80%;
-  overflow-y: auto;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 20px;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  margin-right: 10px;
-  border: 2px solid #007bff;
-  border-radius: 5px;
-  font-size: 16px;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-const TextDisplay = styled.div`
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 800px;
-    color: #333;
-    line-height: 1.5;
-    font-size: 18px;
-    text-align: left;
-    white-space: pre-wrap;
-`;
-
-const AlertMessage = styled(TextDisplay)`
-  background-color: #f8d7da;
-  color: #721c24;
-  border-color: #f5c6cb;
-  animation: fadeInOut 2s forwards;
-
-  @keyframes fadeInOut {
-    0% { opacity: 1; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
-  }
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
-`;
-
-const LoadingText = styled.div`
-  margin-left: 10px;
-  font-size: 16px;
-  color: #007bff;
-`;
-
-const Table = styled.table`
-  width: 80%;
-  height: auto;
-  border-collapse: collapse;
-  margin-top: 10px;
-  overflow-y: auto; 
-`;
-
-const TableHeader = styled.th`
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: 1px solid #ddd;
-  text-align: center;
-
-  &:first-child {
-    width: 20%;
-  }
-`;
-
-const TableCell = styled.td`
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-
-  &:first-child {
-    width: 20%;
-  }
-`;
+import * as v from './CardViewStyle';
 
 function VehicleCard() {
     const [model, setModel] = useState('');
@@ -117,6 +10,9 @@ function VehicleCard() {
     const [VehicleCard, setVehicleCard] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [writeField, setWriteField] = useState(false);
+
+
 
     useEffect(() => {
         let timer;
@@ -128,22 +24,36 @@ function VehicleCard() {
         return () => clearTimeout(timer);
     }, [error]);
 
+
+
     const handleSearch = async (event) => {
         event.preventDefault();
+        const koreanRegex = /^[가-힣]+$/;
+        const intRegex = /^[0-9]+$/;
         if (!model || !year) {
             setError('모델명과 연식을 모두 입력하여 주세요.');
             return;
-        }
+        }else if (!koreanRegex.test(model)){
+            setError('모델명은 한글만 입력하여 주세요.');
+            return;
+        }else if (!intRegex.test(year)){
+        setError('연식은 숫자만 입력하여 주세요.');
+        return;
+    }
 
         setError('');
         setVehicleCard(null);
         setLoading(true);
+
         try {
             const BASE_URL = process.env.REACT_APP_BASE_URL;
             const response = await axios.get(BASE_URL+ `/car/info?model=${model}&year=${year}`);//, {model, year});
             if (response.data && response.status === 200) {
-                // setVehicleCard(response.data);
-                console.log(response.data);
+                // console.log("타입확인 ! : ",typeof  response);
+                parameterCheck(response, model,year);
+                setVehicleCard(response.data);
+                // console.log(response.data);
+                // console.log(response);
             } else {
                 setError('차량 정보를 찾을 수 없습니다. 입력 정보를 확인해 주세요.');
             }
@@ -155,60 +65,98 @@ function VehicleCard() {
         }
     };
 
+    const parameterCheck(response , model , year) {
+        if(response.data.parameters.model!=model){
+            setError("파라미터로 입력한 모델이 응답의 모델과 일치하지 않습니다.")
+            return;
+        }else if(response.data.parameters.year!=year) {
+            setError("파라미터로 입력한 연식이 응답의 연식과 일치하지 않습니다.")
+            return;
+        }
+    }
 
-    function responsePaser(jsonString) {
+    const toggleWriteField = () => {
+        setWriteField(!writeField);
+    };
 
+    useEffect(() => {
+        setWriteField(true);
+        return () => setWriteField(false);
+    }, []);
+      
+    
+
+    function responsePaser(data) {
+        
         return (
-            <Table>
-                <thead>
-                <tr>
-                    <TableHeader>구분</TableHeader>
-                    <TableHeader>내용</TableHeader>
-                </tr>
-                </thead>
-                <tbody>
-                {Object.entries(jsonString).map(([key, value]) =>
-                    (
-                        <tr key={key}>
-                            <TableCell>{key}</TableCell>
-                            <TableCell>{value}</TableCell>
-                        </tr>
-                    )
-                )}
-                </tbody>
-            </Table>
+           
+        <v.MainCont>
+         <v.MyCard class="card" id="myCard">
+             <v.ImgFrame>
+                <v.MainImage  src={data.imgURL} alt="Image"/>
+             </v.ImgFrame>
+                <div class="card-content">
+                    <v.ModelandYear>{data.parameters.model} {data.parameters.year}</v.ModelandYear>
+                </div>
+                <v.ButtonBox class="card-buttons">
+                    <v.InBoxButton onClick={toggleWriteField}>글쓰기</v.InBoxButton>
+                    <v.InBoxButton onClick="toggleContent()">글 목록 보기</v.InBoxButton>
+                </v.ButtonBox>
+         </v.MyCard>
+        {writeField && (
+            <v.WriteField className={`extra-content ${writeField ? 'active' : ''}`} id="extraContent">
+                <v.ArticleForm onSubmit="submitAct()">
+                    <v.TitleAndFile>
+                        <label htmlFor="title"/>
+                        <input type="text" id="title" name="title"/>
+                        <v.FileInputs className="filebox">
+                            <v.InputThumb className="upload-name" value="첨부파일" placeholder="첨부파일"/>
+                            <v.FileLabel for ="file">파일찾기</v.FileLabel>
+                            <v.Fileshide type="file" id="file"/>
+                        </v.FileInputs>
+                    </v.TitleAndFile>
+                    <v.ContentAndInput>
+                        <v.ContentInput type="text" id="title" name="title" col="10"/>
+                        <v.RegButton onclick="toggleContent()">등록</v.RegButton>
+                    </v.ContentAndInput>
+                </v.ArticleForm>
+            </v.WriteField>
+        )}
+        </v.MainCont>
+
+
         )
     }
 
     return (
-        <Container>
-            <Form onSubmit={handleSearch}>
-                <Input
+        <v.Container>
+            <v.Form onSubmit={handleSearch}>
+                <v.Input
                     type="text"
                     placeholder="모델명"
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
                 />
-                <Input
+                <v.Input
                     type="text"
                     placeholder="연식"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                 />
-                <Button type="submit">조회</Button>
-            </Form>
+                <v.Button type="submit">조회</v.Button>
+            </v.Form>
             {loading ? (
-                <LoadingContainer>
+                <v.LoadingContainer>
                     <BeatLoader color="#007bff" loading={loading}/>
-                    <LoadingText>API가 정보를 가져오고 있어요.(3~10초)</LoadingText>
-                </LoadingContainer>
+                    <v.LoadingText>API가 정보를 가져오고 있어요.(3~10초)</v.LoadingText>
+                </v.LoadingContainer>
             ) : (
                 <>
-                    {error && <AlertMessage>{error}</AlertMessage>}
+                    {error && <v.AlertMessage>{error}</v.AlertMessage>}
                     {VehicleCard && responsePaser(VehicleCard)}
                 </>
             )}
-        </Container>
+        </v.Container>
     );
 }
 

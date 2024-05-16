@@ -77,6 +77,7 @@ const Header = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('provider');
     sessionStorage.removeItem('userRole');
+    sessionStorage.removeItem('nickname');
     console.log('로그아웃됨');
   };
 

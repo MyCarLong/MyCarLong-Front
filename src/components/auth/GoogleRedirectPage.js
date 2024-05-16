@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+// import CryptoJS from 'crypto-js';
+// const SECRET_KEY = process.env.REACT_APP_NAME_SECRET_KEY;
+
 const GoogleRedirectPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -17,6 +20,10 @@ const GoogleRedirectPage = () => {
                 sessionStorage.setItem("provider","google");
                 sessionStorage.setItem("isLoggedIn","true");
                 sessionStorage.setItem("userRole","ROLE_USER");
+
+                // let nickname = CryptoJS.AES.encrypt(response.data.nickname, SECRET_KEY).toString();
+                let nickname = response.data.nickname;
+                sessionStorage.setItem("nickname",nickname);
                 navigate("/success");
                 window.location.reload();
                 alert("구글 로그인을 완료했습니다.");

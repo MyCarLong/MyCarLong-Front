@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import OAuthLogin from './OAuthLogin';
 import axios from 'axios';
 
+// import CryptoJS from 'crypto-js';
+// const SECRET_KEY = process.env.REACT_APP_NAME_SECRET_KEY;
+
 const LoginContainer = styled.div`
   width: 100%;
   max-width: 360px;
@@ -101,6 +104,10 @@ const Login = () => {
           sessionStorage.setItem('isLoggedIn', 'true');
           sessionStorage.setItem('provider','BASIC_USER');
           sessionStorage.setItem('userRole','ROLE_USER');
+
+          // let nickname = CryptoJS.AES.encrypt(response.data.name, SECRET_KEY).toString();
+          let nickname = response.data.name;
+          sessionStorage.setItem("nickname",nickname);
           // 새로운 토큰을 받아와서 로컬 스토리지에 저장합니다.
           sessionStorage.setItem('token', response.data.token);
           handleClose();

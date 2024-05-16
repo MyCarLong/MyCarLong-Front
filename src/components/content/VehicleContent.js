@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import VehicleDetail from '../vehicles/VehicleDetail';
-import VehicleCard from '../vehicles/VehicleCard';
+import VehicleGarage from '../vehicles/VehicleGarage';
 
 const StyledVehicleContent = styled.div`
   flex-grow: 1;
@@ -35,7 +35,7 @@ const VehicleContent = ({ activeNav }) => {
             {content}
             <Line />
             {activeNav === '/vehicledetail' && <VehicleDetail />}
-            {activeNav === '/vehicle' && <VehicleCard />}
+            {activeNav === '/vehicle' && <VehicleGarage />}
         </StyledVehicleContent>
     );
 };

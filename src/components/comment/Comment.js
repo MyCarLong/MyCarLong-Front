@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from 'axios';
 
 const CommentContainer = styled.div`
   width: 100%;
@@ -48,25 +49,24 @@ const ImagesWrapper = styled.div`
 `;
 
 const Image = styled.img`
+  &._image{
   width: 100%;
   height: 100%;
   object-fit: cover;
   cursor: pointer;
-  transition: transform 0.5s ease; 
+  transition: transform 0.5s ease;
+  }
 `;
 
 const ImageOverlay = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  vertical-align: top;
   opacity: 0;
   transition: opacity 0.3s ease;
+  pointer-events: none;
 
   ${ImageContainer}:hover & {
     opacity: 1;
@@ -89,8 +89,8 @@ const EnlargedImageContainer = styled.div`
 `;
 
 const EnlargedImage = styled.img`
-  width: 500px;
-  max-height: 300px;
+  width: 1000px;
+  max-height: 700px;
   object-fit: contain;
 `;
 
@@ -127,7 +127,7 @@ const PostButton = styled(Button)`
 `;
 
 const ReplyContainer = styled.div`
-  margin-left: 20px;
+  margin-left: 15px;
   margin-top: 10px;
 `;
 
@@ -148,57 +148,97 @@ const TextInput = styled.input`
 const Reply = ({ reply }) => (
   <ReplyContainer>
     <UserProfile>
-      <Username>{reply.username}</Username>
-      <PostDate>{reply.postDate}</PostDate>
+      <Username>{reply.author}</Username>
+      <PostDate>{reply.regTime}</PostDate>
     </UserProfile>
-    <CommentText>{reply.text}</CommentText>
+    <CommentText>{reply.content}</CommentText>
   </ReplyContainer>
 );
+const BASE_URL= process.env.REACT_APP_BASE_URL;
 
-const Comment = ({ comment }) => {
+
+// 이미지 데이터를 로드하는 함수
+async function loadImageData(imageName) {
+  const response = await axios.get(BASE_URL+`/image/${imageName}`, { responseType: 'blob' });
+  const blob = new Blob([response.data], { type: 'image/jpeg' });
+  const imageUrl = URL.createObjectURL(blob);
+  return imageUrl;
+}
+
+// 이미지를 렌더링하는 컴포넌트
+function ImageComponent({ imageName, onImageClick }) {
+  const [imageUrl, setImageUrl] = useState(null);
+
+  useEffect(() => {
+    loadImageData(imageName).then(setImageUrl);
+  }, [imageName]);
+
+  if (!imageUrl) {
+    return <div>Loading...</div>;
+  }
+
+
+  return <Image className="_image" src={imageUrl} alt="Loaded from API" onClick={() => {
+    console.log('Image URL:', imageUrl);  // 로깅 추가
+    onImageClick(imageUrl);
+  }} />;
+      }
+
+
+
+const Comment = ({ article }) => {
   const [showReplies, setShowReplies] = useState(false);
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [loggedInUserName, setLoggedInUserName] = useState("");
   const [enlargedImage, setEnlargedImage] = useState(null);
+  const [error, setError] = useState('');
+  const [imageUrls, setImageUrls] = useState({});
+  const [nowArticle , setNowArticle] = useState(null);
 
-  const getLoggedInUserName = () => {
-    const username = localStorage.getItem("username");
+    const getLoggedInUserName = () => {
+    const username = sessionStorage.getItem("nickname");
     if (username) {
+      console.log('유저네임!!',username);
       setLoggedInUserName(username);
     }
   };
 
   useEffect(() => {
     getLoggedInUserName();
-  }, []);
+    setNowArticle(article);
+    console.log('article은',article);
+    console.log('nowarticle은',nowArticle);
+  }, [article]);
+  useEffect(() => {
+    if (showReplies) {
+      loadReplies();
+    }
+  }, [nowArticle, showReplies]);
 
   const toggleReplies = () => setShowReplies(!showReplies);
   const toggleCommentForm = () => setShowCommentForm(!showCommentForm);
-
   const handleTextChange = (e) => setReplyText(e.target.value);
-
+  //댓글작성
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: loggedInUserName,
-        text: replyText,
-      }),
-    });
-    if (response.ok) {
+    try {
+      const formData = new FormData();
+      formData.append('author', loggedInUserName);
+      formData.append('content', replyText);
+
+      const response = await axios.post(`${BASE_URL}/board/article/${nowArticle.articleId}/reply`, formData);
       console.log("댓글이 성공적으로 전송되었습니다.");
+      console.log("댓글확인.",response);
       setReplyText("");
-    } else {
-      console.error("댓글 전송 중 오류가 발생했습니다.");
+      loadReplies();  // 댓글 작성 후 댓글 목록 다시 로드
+    } catch (error) {
+      console.error("댓글 전송 중 오류가 발생했습니다.", error);
     }
   };
 
   const enlargeImage = (imageUrl) => {
+    console.log(imageUrl);
     setEnlargedImage(imageUrl);
   };
 
@@ -206,28 +246,70 @@ const Comment = ({ comment }) => {
     setEnlargedImage(null);
   };
 
+  const [replies, setReplies] = useState([]);
+  //댓글 로드
+  const loadReplies = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/board/article/${nowArticle.articleId}/reply`);
+      if (response.status === 200) {
+        setReplies(response.data.replyFormDtoList);
+        console.log("댓글이 성공적으로 로드되었습니다.");
+      } else {
+        console.error("댓글 로드 중 오류가 발생했습니다.");
+      }
+    } catch (error) {
+      console.error("요청 중 오류가 발생했습니다.", error);
+    }
+  };
+
+  useEffect(() => {
+    loadReplies();
+  }, [nowArticle]);
+  
+  const imageView= async(imageSevedName)=> {
+    try{
+
+      const response = await axios.get(`${BASE_URL}/image/${imageSevedName}`);
+      if (response.data && response.status === 200) {
+        return response.data
+      } else {
+        setError(`status: ${response.status}, info: ${response.data.msg}`);
+      }
+    } catch (error) {
+      console.error(error);
+      setError(`An error occurred: ${error.message}`);
+    }
+  };
+
+  const timeCutting= (regTime)=> {
+    let date = new Date(regTime);
+    // 날짜를 필요한 형식으로 문자열로 변환
+    let formattedDate = date.toISOString().split('T')[0];
+    return formattedDate;
+  }
+
   return (
     <CommentContainer>
       <UserProfile>
-        <Username>{comment.username}</Username>
-        <PostDate>{comment.postDate}</PostDate>
+        <Username>{article.author}</Username>
+        <PostDate>{timeCutting(article.regTime)}</PostDate>
       </UserProfile>
       <ImagesWrapper>
-        {comment.images &&
-          comment.images.slice(0, 5).map((image, index) => (
-            <ImageContainer key={index} onClick={() => enlargeImage(image)}>
-              <Image src={image} />
-              <ImageOverlay />
-            </ImageContainer>
-          ))}
+        {article.articleImageList &&
+            article.articleImageList.map((articleImage) => (
+                <ImageContainer key={articleImage.id}>
+                  <ImageComponent imageName={articleImage.imageSavedName} onImageClick={enlargeImage}/>
+                  <ImageOverlay />
+                </ImageContainer>
+            ))}
       </ImagesWrapper>
-      <CommentText>{comment.text}</CommentText>
+      <CommentText>{article.content}</CommentText>
       <ButtonContainer>
         <Button onClick={toggleReplies}>댓글보기</Button>
         <Button onClick={toggleCommentForm}>댓글작성</Button>
       </ButtonContainer>
       {showCommentForm && (
-        <InputForm onSubmit={handleSubmit}>
+        <InputForm onSubmit={handleSubmit} key={article.id}>
           <Username>{loggedInUserName}</Username>
           <TextInput
             placeholder="댓글을 입력하세요"
@@ -237,11 +319,16 @@ const Comment = ({ comment }) => {
           <PostButton type="submit">Post</PostButton>
         </InputForm>
       )}
+      {/*{showReplies && (*/}
+      {/*  <ReplyContainer>*/}
+      {/*    {article.articleReplyList &&*/}
+      {/*      article.articleReplyList.map((reply, index) => <Reply key={index} reply={reply} />)}*/}
+      {/*  </ReplyContainer>*/}
+      {/*)}*/}
       {showReplies && (
-        <ReplyContainer>
-          {comment.replies &&
-            comment.replies.map((reply, index) => <Reply key={index} reply={reply} />)}
-        </ReplyContainer>
+          <ReplyContainer>
+            {replies.map((reply, index) => <Reply key={index} reply={reply} />)}
+          </ReplyContainer>
       )}
       <EnlargedImageContainer enlarged={enlargedImage !== null}>
         {enlargedImage && (

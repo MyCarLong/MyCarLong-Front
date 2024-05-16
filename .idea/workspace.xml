@@ -5,27 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b7fe2dc-6c5f-4644-a267-013dcd8af4e6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/envRepo/focal-time-421105-cf8b5143fae8.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/auth/GoogleRedirectPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/auth/GoogleRedirectPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/auth/KakaoRedirectPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/auth/KakaoRedirectPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/auth/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/auth/Login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/auth/NaverRedirectPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/auth/NaverRedirectPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/auth/OAuthLogin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/auth/OAuthLogin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/auth/Signup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/auth/Signup.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/comment/CommentForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/comment/CommentForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/common/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/common/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/content/VehicleContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/content/VehicleContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/start/Start.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/start/Start.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/vehicles/Vehicle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/vehicles/Vehicle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/vehicles/VehicleDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/vehicles/VehicleDetail.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +55,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;LoginMergeTest&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Windows/System32/cmd.exe&quot;,
+    &quot;last_opened_file_path&quot;: &quot;H:/fullstack/TEAMPROJECT/MCL_Front/public/images&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -89,6 +71,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="H:\fullstack\TEAMPROJECT\MCL_Front\public\images" />
       <recent name="H:\fullstack\TEAMPROJECT\MCL_Front" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -131,7 +114,10 @@
       <workItem from="1714490670960" duration="26000" />
       <workItem from="1715668347598" duration="1692000" />
       <workItem from="1715671321460" duration="6598000" />
-      <workItem from="1715693476639" duration="17205000" />
+      <workItem from="1715693476639" duration="54595000" />
+      <workItem from="1715828066558" duration="4472000" />
+      <workItem from="1715836206101" duration="12862000" />
+      <workItem from="1715851300223" duration="6812000" />
     </task>
     <servers />
   </component>
