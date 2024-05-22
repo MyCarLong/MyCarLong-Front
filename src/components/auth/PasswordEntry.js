@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Container = styled.div`
   width: 100%;
@@ -64,14 +65,26 @@ const PasswordEntry = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password === '1234') {
-      navigate('/userinfo');
-    } else {
-      alert('Incorrect password');
-    }
-  };
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    const name = sessionStorage.getItem('nickname');
+    try {
+      const response = await axios.post(BASE_URL + '/api/mypage', { password, name });
+      if (response.status === 200) {
+          navigate('/userinfo');
+      } else {
+          alert('비밀번호를 다시 입력해주세요');
+      }
+  } catch (error) {
+      if (error.response && error.response.status === 400) {
+          alert('비밀번호를 다시 입력해주세요');
+      } else {
+          alert('비밀번호를 다시 입력해주세요');
+      }
+  }
+};
 
   const handleClose = () => {
     navigate('/');

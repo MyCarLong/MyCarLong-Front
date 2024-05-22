@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import OAuthLogin from './OAuthLogin';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Container = styled.div`
   width: 100%;
@@ -59,11 +62,17 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-const ErrorMsg = styled.span`
+const ErrorMsg = styled.div`
+  display: flex;
+  align-items: center;
   color: red;
   font-size: 14px;
+  margin-top: 5px;
 `;
 
+const ErrorIcon = styled(FontAwesomeIcon)`
+  margin-right: 5px;
+`;
 
 const Signup = () => {
   const [userDetails, setUserDetails] = useState({
@@ -73,7 +82,13 @@ const Signup = () => {
     confirmPassword: '',
     contact: ''
   });
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    contact: ''
+  });
   const formRef = useRef(null);
   const navigate = useNavigate();  
 
@@ -94,45 +109,78 @@ const Signup = () => {
     };
   }, []);
 
-  const validateForm = () => {
+  const validateField = (name, value) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^\d{3}-\d{4}-\d{4}$/;
     const nameRegex = /^[가-힣a-zA-Z]+$/;
 
-    if (!userDetails.name.trim() || userDetails.name.length > 10) {
-      setError('이름은 한글, 영어로 10자 이내로 입력하세요.');
-      return false;
+    switch (name) {
+      case 'name':
+        if (!value.trim() || value.length > 10) {
+          return '이름은 한글, 영어로 10자 이내로 입력하세요.';
+        }
+        break;
+      case 'email':
+        if (!emailRegex.test(value)) {
+          if (!value.includes('@')) {
+            return "이메일 주소에 '@'를 포함해 주세요.";
+          }
+          return '유효한 이메일 주소를 입력하세요.';
+        }
+        break;
+      case 'password':
+        if (value.length < 8) {
+          return '패스워드는 8글자 이상 입력하세요.';
+        }
+        break;
+      case 'confirmPassword':
+        if (value !== userDetails.password) {
+          return '패스워드가 일치하지 않습니다.';
+        }
+        break;
+      case 'contact':
+        if (!phoneRegex.test(value)) {
+          return '연락처는 000-0000-0000 형식으로 입력하세요.';
+        }
+        break;
+      default:
+        break;
     }
-    if (!emailRegex.test(userDetails.email)) {
-      setError('유효한 이메일 주소를 입력하세요.');
-      return false;
-    }
-    if (userDetails.password.length < 8) {
-      setError('패스워드는 8글자 이상 입력하세요.');
-      return false;
-    }
-    if (userDetails.password !== userDetails.confirmPassword) {
-      setError('패스워드가 일치하지 않습니다.');
-      return false;
-    }  
-    if (!phoneRegex.test(userDetails.contact)) {
-      setError('연락처는 000-0000-0000 형식으로 입력하세요.');
-      return false;
-    }
-    setError('');
-    return true;
+    return '';
   };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value);
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      [name]: error
+    }));
+  };
+
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (validateForm()) {
+
+    let valid = true;
+    const newErrors = {};
+
+    Object.keys(userDetails).forEach(key => {
+      const error = validateField(key, userDetails[key]);
+      if (error) {
+        valid = false;
+        newErrors[key] = error;
+      }
+    });
+
+    setErrors(newErrors);
+
+    if (valid) {
       try {
-        const response = await axios.post(BASE_URL+'/api/signup', userDetails);
-        //TODO: BASE_URL converting 작업
+        const response = await axios.post(BASE_URL + '/api/signup', userDetails);
         console.log("Signup successful!", response.data);
 
-        // 회원가입 성공 시 서버로부터 받은 토큰을 로컬 스토리지에 저장
         localStorage.setItem('token', response.data.token);
         
         alert("회원가입이 완료되었습니다.");
@@ -140,9 +188,12 @@ const Signup = () => {
       } catch (error) {
         console.error("Signup failed!", error.response.data);
         if (error.response.status === 400 && error.response.data === '중복된 이메일입니다.') {
-          setError('중복된 이메일입니다.');
+          setErrors(prevErrors => ({
+            ...prevErrors,
+            email: '중복된 이메일입니다.'
+          }));
         } else {
-          setError('회원가입에 실패했습니다.');
+          alert('회원가입에 실패했습니다.');
         }
       }
     }
@@ -153,12 +204,81 @@ const Signup = () => {
       <CloseButton onClick={handleClose}>×</CloseButton>
       <Title>Sign Up</Title>
       <Form onSubmit={handleSubmit}>
-        <Input type="email" name="email" placeholder="Email" value={userDetails.email} onChange={(e) => setUserDetails({...userDetails, email: e.target.value})} required />
-        <Input type="password" name="password" placeholder="Password" value={userDetails.password} onChange={(e) => setUserDetails({...userDetails, password: e.target.value})} required />
-        <Input type="password" name="confirmPassword" placeholder="Confirm Password" value={userDetails.confirmPassword} onChange={(e) => setUserDetails({...userDetails, confirmPassword: e.target.value})} required />
-        <Input type="text" name="name" placeholder="Name" value={userDetails.name} onChange={(e) => setUserDetails({...userDetails, name: e.target.value})} required />
-        <Input type="text" name="contact" placeholder="Contact (000-0000-0000)" value={userDetails.contact} onChange={(e) => setUserDetails({...userDetails, contact: e.target.value})} required />
-        {error && <ErrorMsg>{error}</ErrorMsg>}
+        <Input 
+          type="email" 
+          name="email" 
+          placeholder="Email" 
+          value={userDetails.email} 
+          onChange={(e) => setUserDetails({...userDetails, email: e.target.value})} 
+          onBlur={handleBlur}
+          required 
+        />
+        {errors.email && (
+          <ErrorMsg>
+            <ErrorIcon icon={faExclamationCircle} />
+            {errors.email}
+          </ErrorMsg>
+        )}
+        <Input 
+          type="password" 
+          name="password" 
+          placeholder="Password" 
+          value={userDetails.password} 
+          onChange={(e) => setUserDetails({...userDetails, password: e.target.value})} 
+          onBlur={handleBlur}
+          required 
+        />
+        {errors.password && (
+          <ErrorMsg>
+            <ErrorIcon icon={faExclamationCircle} />
+            {errors.password}
+          </ErrorMsg>
+        )}
+        <Input 
+          type="password" 
+          name="confirmPassword" 
+          placeholder="Confirm Password" 
+          value={userDetails.confirmPassword} 
+          onChange={(e) => setUserDetails({...userDetails, confirmPassword: e.target.value})} 
+          onBlur={handleBlur}
+          required 
+        />
+        {errors.confirmPassword && (
+          <ErrorMsg>
+            <ErrorIcon icon={faExclamationCircle} />
+            {errors.confirmPassword}
+          </ErrorMsg>
+        )}
+        <Input 
+          type="text" 
+          name="name" 
+          placeholder="Name" 
+          value={userDetails.name} 
+          onChange={(e) => setUserDetails({...userDetails, name: e.target.value})} 
+          onBlur={handleBlur}
+          required 
+        />
+        {errors.name && (
+          <ErrorMsg>
+            <ErrorIcon icon={faExclamationCircle} />
+            {errors.name}
+          </ErrorMsg>
+        )}
+        <Input 
+          type="text" 
+          name="contact" 
+          placeholder="Contact (000-0000-0000)" 
+          value={userDetails.contact} 
+          onChange={(e) => setUserDetails({...userDetails, contact: e.target.value})} 
+          onBlur={handleBlur}
+          required 
+        />
+        {errors.contact && (
+          <ErrorMsg>
+            <ErrorIcon icon={faExclamationCircle} />
+            {errors.contact}
+          </ErrorMsg>
+        )}
         <Button type="submit">Sign Up</Button>
       </Form>
       <OAuthLogin />

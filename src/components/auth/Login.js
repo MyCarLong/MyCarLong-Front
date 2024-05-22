@@ -108,6 +108,7 @@ const Login = () => {
           // let nickname = CryptoJS.AES.encrypt(response.data.name, SECRET_KEY).toString();
           let nickname = response.data.name;
           sessionStorage.setItem("nickname",nickname);
+          sessionStorage.setItem("email",email);
           // 새로운 토큰을 받아와서 로컬 스토리지에 저장합니다.
           sessionStorage.setItem('token', response.data.token);
           handleClose();
