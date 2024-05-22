@@ -8,6 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/envRepo/focal-time-421105-cf8b5143fae8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +29,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -53,7 +55,7 @@
   &quot;keyToString&quot;: {
     &quot;Gradle.C:/hdw_data/react_data/carproject-master/mycarlong-back/build.gradle.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;LoginMergeTest&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;test&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;H:/fullstack/TEAMPROJECT/MCL_Front/public/images&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -117,7 +119,13 @@
       <workItem from="1715693476639" duration="54595000" />
       <workItem from="1715828066558" duration="4472000" />
       <workItem from="1715836206101" duration="12862000" />
-      <workItem from="1715851300223" duration="6812000" />
+      <workItem from="1715851300223" duration="6881000" />
+      <workItem from="1715890282489" duration="5048000" />
+      <workItem from="1715924143414" duration="1472000" />
+      <workItem from="1716172225615" duration="4466000" />
+      <workItem from="1716255332958" duration="1667000" />
+      <workItem from="1716275549635" duration="630000" />
+      <workItem from="1716354074724" duration="3427000" />
     </task>
     <servers />
   </component>
