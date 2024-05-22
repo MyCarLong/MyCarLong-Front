@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 const PageContainer = styled.div`
   width: 100%;
@@ -77,22 +78,24 @@ const Button = styled.button`
 const MyPage = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
-    name: '하동원',
-    email: 'dd2558@naver.com',
-    contact: '010-1234-5678',
-    password: 'gkehddnjs10',
-    confirmPassword: 'gkehddnjs10'
+    name: sessionStorage.getItem('nickname'),
+    email: sessionStorage.getItem('email'),
+    contact: '',
+    password: '',
+    changePassword: ''
   });
-  const [passwordError, setPasswordError] = useState('');
-  const [confirmPasswordError, setConfirmPasswordError] = useState('');
-  const [contactError, setContactError] = useState('');
+  const [ConfirmPasswordError, setPasswordError] = useState('');
+  const [ChangePasswordError, setConfirmPasswordError] = useState('');
+  const [ConfirmcontactError, setContactError] = useState('');
+
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserInfo(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (userInfo.password.length > 0 && userInfo.password.length < 8) {
@@ -101,8 +104,8 @@ const MyPage = () => {
       setPasswordError('');
     }
 
-    if (userInfo.password !== userInfo.confirmPassword) {
-      setConfirmPasswordError('패스워드가 일치하지 않습니다.');
+    if (userInfo.ConfirmPasswordError===" ") {
+      setConfirmPasswordError('변경할 비밀번호를 입력해주세요.');
     } else {
       setConfirmPasswordError('');
     }
@@ -113,16 +116,49 @@ const MyPage = () => {
       setContactError('');
     }
 
-    if (!passwordError && !confirmPasswordError && !contactError) {
-      toast.success('Information updated', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+    if (!ConfirmPasswordError && !ChangePasswordError && !ConfirmcontactError) {
+      try {
+        const BASE_URL = process.env.REACT_APP_BASE_URL;
+        const response = await axios.put(BASE_URL + '/api/modify', {
+          name : sessionStorage.getItem('nickname'),
+          email : sessionStorage.getItem('email'),
+          password: userInfo.password,
+          changePassword: userInfo.changePassword,
+          contact: userInfo.contact,
+        });
+
+        if (response.status === 200) {
+          toast.success('비밀번호가 수정되었습니다.', {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        } else {
+          toast.error('입력하신 정보가 일치하지 않습니다.', {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      } catch (error) {
+        toast.error('입력하신 정보가 일치하지 않습니다.', {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     }
   };
 
@@ -144,19 +180,19 @@ const MyPage = () => {
           <Input type="email" value={userInfo.email} readOnly />
         </Label>
         <Label>
+          Confirm Password
+          <Input type="password" name="password" value={userInfo.password} onChange={handleInputChange} placeholder='기존 비밀번호를 입력해주세요.' required />
+          {ConfirmPasswordError && <span style={{ color: 'red' }}>{ConfirmPasswordError}</span>}
+        </Label>
+        <Label>
           Change Password
-          <Input type="password" name="password" value={userInfo.password} onChange={handleInputChange} />
-          {passwordError && <span style={{ color: 'red' }}>{passwordError}</span>}
+          <Input type="password" name="changePassword" value={userInfo.changePassword} onChange={handleInputChange} placeholder='새로운 비밀번호를 입력해주세요' required />
+          {ChangePasswordError && <span style={{ color: 'red' }}>{ChangePasswordError}</span>}
         </Label>
         <Label>
-          Confirm Change Password
-          <Input type="password" name="confirmPassword" value={userInfo.confirmPassword} onChange={handleInputChange} />
-          {confirmPasswordError && <span style={{ color: 'red' }}>{confirmPasswordError}</span>}
-        </Label>
-        <Label>
-          Change Contact
-          <Input type="text" name="contact" value={userInfo.contact} onChange={handleInputChange} />
-          {contactError && <span style={{ color: 'red' }}>{contactError}</span>}
+          Confirm Contact
+          <Input type="text" name="contact" value={userInfo.contact} onChange={handleInputChange} placeholder='전화번호를 입력해주세요.' required />
+          {ConfirmcontactError && <span style={{ color: 'red' }}>{ConfirmcontactError}</span>}
         </Label>
         <Button type="submit">Update</Button>
       </InfoForm>
