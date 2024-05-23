@@ -158,7 +158,7 @@ const Signup = () => {
     }));
   };
 
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -178,6 +178,7 @@ const Signup = () => {
 
     if (valid) {
       try {
+        const BASE_URL = process.env.REACT_APP_BASE_URL;
         const response = await axios.post(BASE_URL + '/api/signup', userDetails);
         console.log("Signup successful!", response.data);
 

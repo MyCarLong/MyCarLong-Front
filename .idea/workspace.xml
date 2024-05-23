@@ -5,10 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b7fe2dc-6c5f-4644-a267-013dcd8af4e6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitmodules" beforeDir="false" afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/envRepo/focal-time-421105-cf8b5143fae8.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/auth/PasswordEntry.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/auth/PasswordEntry.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/auth/Signup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/auth/Signup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/chatgpt/ChatApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/chatgpt/ChatApp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/comment/Comment.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/comment/Comment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/vehicles/VehicleDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/vehicles/VehicleDetail.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="back_LoginTest" />
+        <entry key="$PROJECT_DIR$" value="cherrypickTest" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -57,24 +62,24 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;test&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;H:/fullstack/TEAMPROJECT/MCL_Front/public/images&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Programing/Node/node.exe&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;E:/Programing/Node/node&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;C:\\Windows\\System32\\cmd.exe&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.JSPX&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="H:\fullstack\TEAMPROJECT\MCL_Front\public\images" />
       <recent name="H:\fullstack\TEAMPROJECT\MCL_Front" />
+      <recent name="H:\fullstack\TEAMPROJECT\MCL_Front\public\images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="H:\fullstack\TEAMPROJECT\MCL_Front\envRepo" />
@@ -126,8 +131,21 @@
       <workItem from="1716255332958" duration="1667000" />
       <workItem from="1716275549635" duration="630000" />
       <workItem from="1716354074724" duration="3427000" />
+      <workItem from="1716376995930" duration="699000" />
+      <workItem from="1716395461810" duration="6283000" />
+      <workItem from="1716435422285" duration="2651000" />
+      <workItem from="1716441323545" duration="10628000" />
+      <workItem from="1716478038906" duration="574000" />
+      <workItem from="1716478861941" duration="1567000" />
+      <workItem from="1716480475054" duration="558000" />
+      <workItem from="1716481155167" duration="6314000" />
     </task>
     <servers />
+  </component>
+  <component name="TerminalProjectNonSharedOptionsProvider">
+    <envs>
+      <env key="NODE_HOME" value="%NODE_HOME%" />
+    </envs>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />

@@ -71,7 +71,14 @@ const PasswordEntry = () => {
     const BASE_URL = process.env.REACT_APP_BASE_URL;
     const name = sessionStorage.getItem('nickname');
     try {
-      const response = await axios.post(BASE_URL + '/api/mypage', { password, name });
+      const response = await axios.post(BASE_URL + '/api/mypage', {
+          "email": "",
+          "password": password,
+          "confirmPassword": "",
+          "name": name,
+          "contact": "",
+          "changePassword": ""
+      });
       if (response.status === 200) {
           navigate('/userinfo');
       } else {

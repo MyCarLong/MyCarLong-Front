@@ -18,7 +18,7 @@ const Vehicle = () => {
   const [activeNav, setActiveNav] = useState('/vehicle');
 
   const navItems = [
-    { path: '/vehicle', image: '/images/vehicle-2.jpg', text: '모두의차고', icon: <MdDirectionsCar /> },
+    { path: '/vehiclegarage', image: '/images/vehicle-2.jpg', text: '모두의차고', icon: <MdDirectionsCar /> },
     { path: '/vehicledetail', image: '/images/vehicle_info.jpg', text: 'AI차량제원', icon: <MdInfo /> },
   ];
 

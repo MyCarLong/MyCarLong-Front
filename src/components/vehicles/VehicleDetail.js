@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import {BeatLoader} from 'react-spinners';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
   background: #f0f0f0;
   height: 80%;
@@ -20,24 +20,25 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-  padding: 10px;
-  margin-right: 10px;
-  border: 2px solid #007bff;
-  border-radius: 5px;
-  font-size: 16px;
+    padding: 10px;
+    margin-right: 10px;
+    border: 2px solid #78909C;
+    border-radius: 5px;
+    color: #78909C;
+    font-size: 16px;
 `;
 
 const Button = styled.button`
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #007bff;
+  background-color: #78909C;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #0056b3;
+      background-color: #B0BEC5;
   }
 `;
 
@@ -46,25 +47,66 @@ const TextDisplay = styled.div`
     background: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 800px;
+    width: 50%;
+    max-width: 500px;
     color: #333;
     line-height: 1.5;
     font-size: 18px;
-    text-align: left;
+    text-align: center;
     white-space: pre-wrap;
 `;
 
 const AlertMessage = styled(TextDisplay)`
-  background-color: #f8d7da;
-  color: #721c24;
-  border-color: #f5c6cb;
-  animation: fadeInOut 2s forwards;
+    background-color: #78909C;
+    color: white;
+    border-color: #f5c6cb;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
 
-  @keyframes fadeInOut {
-    0% { opacity: 1; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
+
+const fadeInTable = keyframes`
+    from {
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+    }
+`;
+
+const Table = styled.table`
+  width: 80%;
+  height: auto;
+  border-collapse: collapse;
+  margin-top: 10px;
+    overflow-y: auto;
+    animation: ${fadeInTable} 1.5s ease-out forwards;
+    visibility: hidden;
+`;
+
+const TableHeader = styled.th`
+  padding: 10px;
+  background-color: #78909C;
+  color: white;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-weight: 300;
+  &:first-child {
+    width: 20%;
+  }
+`;
+
+const TableCell = styled.td`
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+    color: #78909C;
+    font-weight: 100;
+  &:first-child {
+    width: 20%;
   }
 `;
 
@@ -78,37 +120,7 @@ const LoadingContainer = styled.div`
 const LoadingText = styled.div`
   margin-left: 10px;
   font-size: 16px;
-  color: #007bff;
-`;
-
-const Table = styled.table`
-  width: 80%;
-  height: auto;
-  border-collapse: collapse;
-  margin-top: 10px;
-  overflow-y: auto; 
-`;
-
-const TableHeader = styled.th`
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: 1px solid #ddd;
-  text-align: center;
-
-  &:first-child {
-    width: 20%;
-  }
-`;
-
-const TableCell = styled.td`
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-
-  &:first-child {
-    width: 20%;
-  }
+  color: #607D8B;
 `;
 
 function VehicleDetail() {
@@ -134,12 +146,16 @@ function VehicleDetail() {
             setError('모델명과 연식을 모두 입력하여 주세요.');
             return;
         }
+        const currentYear = new Date().getFullYear();
+        if (year < 2000 || year > currentYear) {
+            return;
+        }
 
         setError('');
         setVehicleDetails(null);
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:5000/api/vehicle', {model, year});
+            const response = await axios.post('http://localhost:5000/exp/vehicle', {model, year});
             if (response.data && response.status === 200) {
                 setVehicleDetails(response.data.vehicleSpecs);
             } else {

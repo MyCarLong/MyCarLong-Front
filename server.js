@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-app.post("/api/chat", async (req, res) => {
+app.post("/exp/chat", async (req, res) => {
   const { text } = req.body;
   console.log("Received text from frontend:", text);
 
@@ -57,7 +57,7 @@ app.post("/api/chat", async (req, res) => {
 });
 
 
-app.post("/api/vehicle", async (req, res) => {
+app.post("/exp/vehicle", async (req, res) => {
   const { model, year } = req.body;
   console.log(`Vehicle model and year request: ${model} ${year}`);
 

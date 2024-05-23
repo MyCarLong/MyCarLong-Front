@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios from 'axios';
 
 const CommentContainer = styled.div`
-  width: 100%;
+  width: 800px;
   padding: 10px;
   background-color: #fff;
   border-radius: 5px;
@@ -159,10 +159,15 @@ const BASE_URL= process.env.REACT_APP_BASE_URL;
 
 // 이미지 데이터를 로드하는 함수
 async function loadImageData(imageName) {
-  const response = await axios.get(BASE_URL+`/image/${imageName}`, { responseType: 'blob' });
-  const blob = new Blob([response.data], { type: 'image/jpeg' });
-  const imageUrl = URL.createObjectURL(blob);
-  return imageUrl;
+  return axios.get(BASE_URL + `/image/${imageName}`)
+      .then(response => {
+        const imageUrl = response.data;
+        return imageUrl;
+      })
+      .catch(error => {
+        console.error('Error fetching image:', error);
+        return null; // 에러 발생 시 null 반환
+      });
 }
 
 // 이미지를 렌더링하는 컴포넌트
@@ -176,13 +181,20 @@ function ImageComponent({ imageName, onImageClick }) {
   if (!imageUrl) {
     return <div>Loading...</div>;
   }
-
-
-  return <Image className="_image" src={imageUrl} alt="Loaded from API" onClick={() => {
-    console.log('Image URL:', imageUrl);  // 로깅 추가
-    onImageClick(imageUrl);
-  }} />;
-      }
+  console.log(imageName);
+//${process.env.REACT_APP_CDN_URL}/${imageName}
+  return (
+      <Image
+          className="_image"
+          src={imageUrl}
+          alt="Loaded from API"
+          onClick={() => {
+            console.log('Image URL:', imageUrl);  // 로깅 추가
+            onImageClick(imageUrl);
+          }}
+      />
+  );
+};
 
 
 
@@ -263,9 +275,11 @@ const Comment = ({ article }) => {
   };
 
   useEffect(() => {
-    loadReplies();
+    if (nowArticle && nowArticle.articleId) {
+      loadReplies();
+    }
   }, [nowArticle]);
-  
+
   const imageView= async(imageSevedName)=> {
     try{
 

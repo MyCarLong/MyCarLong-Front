@@ -9,73 +9,88 @@ import {BeatLoader} from 'react-spinners';
 import * as v from './CardViewStyle';
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 20px;
-  width: 100%;
-  height: 80%;
-  background: #f0f0f0;
-  overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    width: 90%;
+    height: 85%;
+    background: #f0f0f0;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 12px; /* Y축 스크롤바의 너비 설정 */
+        height: 12px; /* X축 스크롤바의 높이 설정 */
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(240, 240, 240, 0.07); /* 스크롤바 트랙 배경색 */
+        border-radius: 10px; /* 둥글게 만들기 */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(136, 136, 136, 0.51); /* 스크롤바 핸들 색상 */
+        border-radius: 10px; /* 둥글게 만들기 */
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(119, 143, 155, 0.7); /* 스크롤바 핸들 색상 (호버시) */
+    }
+    ///* Firefox */
+    //scrollbar-width: thin; /* 스크롤바 두께 설정 */
+    //scrollbar-color: #888888 #F0F0F0; /* 스크롤바 색상 설정 (핸들, 트랙) */
 `;
 
 const Form = styled.form`
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
 `;
 
 const Input = styled.input`
-  padding: 10px;
-  margin-right: 10px;
-  border: 2px solid #78909C;
-  border-radius: 5px;
-  color: #78909C;
-  font-size: 16px;
+    padding: 10px;
+    margin-right: 10px;
+    border: 2px solid #78909C;
+    border-radius: 5px;
+    color: #78909C;
+    font-size: 16px;
 `;
 
 const StyledButton = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #78909C;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #78909C;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.7s ease-in-out;
 
-  &:hover {
-    background-color: #B0BEC5;
-  }
+    &:hover {
+        background-color: #B0BEC5;
+    }
 `;
 
 const MainContent = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
 `;
 
 const CardContainer = styled.div`
-  width: 700px;
-  margin-right: 20px;
+    width: 550px;
+    margin-right: 30px;
 `;
 
 const CommentContainer = styled.div`
-  flex: 1;
-  transition: opacity 0.5s ease;
-  opacity: ${({ visible }) => (visible ? '1' : '0')};
+    flex: 1;
+    transition: opacity 0.5s ease;
+    opacity: ${({ visible }) => (visible ? '1' : '0')};
 `;
-// const CatCell = styled.td`
-//     width: 50px;
-//     text-align: center;
-// `;
-// const Concell = styled.td`
-//     width: 80%;
-//     text-align: left;
-// `;
+
 const BackTable = styled.table`
-    border: 1px #a39485 solid;
+    border: 1px #a39485 solid;c
     font-size: .9em;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .25);
     width: 100%;
@@ -99,6 +114,10 @@ const BackTableTd = styled.td`
     vertical-align: middle;
     border-bottom: 1px solid rgba(0,0,0,.1);
     background: #fff;
+`;
+
+const CommentEnd = styled.div`
+    height: 10px;
 `;
 
 function VehicleGarage() {
@@ -297,6 +316,7 @@ function VehicleGarage() {
                 </CardContainer>
                 <CommentContainer visible={commentVisible}>
                     <CommentMain articles={articles.filter(article => article.category == category)} category={category}/>
+                    <CommentEnd/>
                 </CommentContainer>
             </MainContent>
         );
