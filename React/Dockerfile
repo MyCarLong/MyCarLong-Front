@@ -32,6 +32,14 @@ RUN apt-get update && apt-get install -y nginx && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
+# 기본 설정 파일 삭제
+RUN rm /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/conf.d/default
+RUN rm /etc/nginx/sites-available/default.conf
+RUN rm /etc/nginx/sites-available/default
+RUN rm -rf /etc/nginx/conf.d/*
+
+
 # 원하는 경로에 디렉토리 생성
 RUN mkdir -p /var/www/mycarlong
 
@@ -39,10 +47,10 @@ RUN mkdir -p /var/www/mycarlong
 RUN cp -r /app/build/* /var/www/mycarlong/
 
 # Nginx 설정 파일 복사
-COPY mycarlong.conf /etc/nginx/sites-available/default
+#COPY ./mycarlong.conf /etc/nginx/conf.d/mycarlong.conf
+COPY ./mycarlong.conf /etc/nginx/conf.d/
+#COPY mycarlong.conf /etc/nginx/conf.d/mycarlong.conf
+#COPY mycarlong.conf /etc/nginx/conf.d/
 
-# 심볼릭 링크 생성
-RUN rm -f /etc/nginx/sites-enabled/mycarlong.conf && \
-  ln -s /etc/nginx/sites-available/mycarlong.conf /etc/nginx/sites-enabled/
 # Nginx 실행
 CMD ["nginx", "-g", "daemon off;"]
