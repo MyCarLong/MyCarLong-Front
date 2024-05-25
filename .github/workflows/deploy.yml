@@ -26,6 +26,7 @@ jobs:
       - name: Build the React application
         env:
           NODE_OPTIONS: --max_old_space_size=4096
+          GENERATE_SOURCEMAP: false
         run: |
           cd React
           echo "Memory usage before build:"
