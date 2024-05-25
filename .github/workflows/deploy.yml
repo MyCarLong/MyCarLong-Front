@@ -35,6 +35,11 @@ jobs:
           echo "REACT_APP_NAME_SECRET_KEY=${{ secrets.NAME_SECRET_KEY }}" >> .env
           echo "REACT_APP_GOOGLE_APPLICATION_CREDENTIALS='${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'" >> .env
 
+      - name: Add SSH key
+        run: |
+          echo "${{ secrets.EC2_SSH_PRIVATE }}" > /tmp/ssh_key
+          chmod 600 /tmp/ssh_key
+
       - name: Deploy to EC2
         env:
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
@@ -43,11 +48,9 @@ jobs:
           NAME_SECRET_KEY: ${{ secrets.NAME_SECRET_KEY }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd /path/to/your/project
             git pull origin release
             docker-compose down
             docker-compose up --build -d
           EOF
-        secrets:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
