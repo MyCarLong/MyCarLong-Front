@@ -1,13 +1,14 @@
 # 베이스 이미지로 Ubuntu 24.04 사용
 FROM ubuntu:24.04
 LABEL authors="KGH"
-# 필요한 패키지 설치
+
+# 필요한 패키지 설치 및 Node.js 설치 (이미 설치된 경우 스킵)
 RUN apt-get update && apt-get install -y \
   curl \
   gnupg && \
-  curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+  (which node || curl -fsSL https://deb.nodesource.com/setup_20.x | bash -) && \
   apt-get install -y nodejs && \
-  npm install -g npm@10.2.4 pm2 && \
+  (npm -v | grep 10.2.4 || npm install -g npm@10.2.4 pm2) && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 

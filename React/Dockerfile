@@ -1,13 +1,13 @@
 # 베이스 이미지로 Ubuntu 24.04 사용
 FROM ubuntu:24.04
 
-# Node.js 20.x 설치
+# Node.js 설치 (이미 설치된 경우 스킵)
 RUN apt-get update && apt-get install -y \
   curl \
   gnupg && \
-  curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+  (which node || curl -fsSL https://deb.nodesource.com/setup_20.x | bash -) && \
   apt-get install -y nodejs && \
-  npm install -g npm@10.2.4 && \
+  (npm -v | grep 10.2.4 || npm install -g npm@10.2.4) && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -26,21 +26,26 @@ COPY . .
 # 빌드 실행
 RUN npm run build
 LABEL authors="KGH"
-# Nginx 설치
+
+# Nginx 설치 (이미 설치된 경우 스킵)
 RUN apt-get update && apt-get install -y nginx && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-# 원하는 경로에 디렉토리 생성 및 파일 복사
+# 원하는 경로에 디렉토리 생성 (이미 존재하는 경우 스킵)
 RUN mkdir -p /var/www/mycarlong
-COPY --from=0 /app/build /usr/share/nginx/html
-COPY --from=0 /app/build/index.html /var/www/mycarlong/index.html
 
-# Nginx 설정 파일 복사
-COPY nginx.conf /etc/nginx/sites-available/default
+# build 결과물을 Nginx 경로로 복사
+RUN cp -r /app/build/* /var/www/mycarlong/
 
-# Nginx 포트 설정
-EXPOSE 80 443
+# Nginx 설정 파일 복사 (이미 존재하는 경우 스킵)
+COPY copy-nginx-config.sh /copy-nginx-config.sh
+RUN chmod +x /copy-nginx-config.sh && /copy-nginx-config.sh
+
+# Nginx 포트 설정 (이미 설정된 경우 스킵)
+RUN if ! grep -q "listen 3007;" /etc/nginx/sites-available/default; then \
+      echo "server { listen 3007; root /var/www/mycarlong; index index.html; try_files \$uri \$uri/ /index.html; }" >> /etc/nginx/sites-available/default; \
+    fi
 
 # Nginx 실행
 CMD ["nginx", "-g", "daemon off;"]
