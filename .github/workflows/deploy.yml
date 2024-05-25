@@ -25,10 +25,14 @@ jobs:
 
       - name: Build the React application
         env:
-          NODE_OPTIONS: --max_old_space_size=4096  # 메모리 할당 한도를 4GB로 설정
+          NODE_OPTIONS: --max_old_space_size=4096
         run: |
           cd React
-          CI=false npm run build  # CI 환경 변수를 false로 설정하여 경고를 오류로 처리하지 않음
+          echo "Memory usage before build:"
+          free -m
+          CI=false npm run build
+          echo "Memory usage after build:"
+          free -m
 
       - name: Set environment variables from GitHub Secrets
         run: |
@@ -65,8 +69,13 @@ jobs:
           EOF
 
       - name: Cleanup
-        if: failure()
         run: |
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            ./cleanup.sh
+            echo "Cleaning up..."
+            docker system prune -f
+            docker volume prune -f
+            docker network prune -f
+            rm -rf /home/ubuntu/MyCarLong-Front/React/build
+            rm -rf /home/ubuntu/MyCarLong-Front/React/node_modules
+            echo "Cleanup complete."
           EOF
