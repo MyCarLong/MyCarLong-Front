@@ -24,6 +24,8 @@ jobs:
           cd ../Express && npm install
 
       - name: Build the React application
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096  # 메모리 할당 한도를 4GB로 설정
         run: |
           cd React
           CI=false npm run build  # CI 환경 변수를 false로 설정하여 경고를 오류로 처리하지 않음
@@ -59,5 +61,12 @@ jobs:
               cd /home/ubuntu/MyCarLong-Front
             fi
             docker-compose down
-            docker-compose up --build -d
+            docker-compose up --build -d || { echo "Build failed, cleaning up..."; ./cleanup.sh; exit 1; }
+          EOF
+
+      - name: Cleanup
+        if: failure()
+        run: |
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            ./cleanup.sh
           EOF
