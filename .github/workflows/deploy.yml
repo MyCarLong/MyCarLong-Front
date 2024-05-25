@@ -1,0 +1,45 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies for both React and Express
+        run: |
+          cd React && npm install
+          cd ../Express && npm install
+
+      - name: Build the React application
+        run: |
+          cd frontend && npm run build
+
+      - name: Set environment variables from GitHub Secrets
+        run: |
+          echo "REACT_APP_GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> .env
+          echo "REACT_APP_BASE_URL=${{ secrets.BASE_URL }}" >> .env
+          echo "REACT_APP_GPT_API_KEY=${{ secrets.GPT_API_KEY }}" >> .env
+          echo "REACT_APP_NAME_SECRET_KEY=${{ secrets.NAME_SECRET_KEY }}" >> .env
+          echo "REACT_APP_GOOGLE_APPLICATION_CREDENTIALS='${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'" >> .env
+
+      - name: Deploy to Docker
+        run: docker-compose up --build -d
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          GPT_API_KEY: ${{ secrets.GPT_API_KEY }}
+          NAME_SECRET_KEY: ${{ secrets.NAME_SECRET_KEY }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}

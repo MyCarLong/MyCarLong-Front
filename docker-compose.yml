@@ -1,0 +1,30 @@
+version: '3'
+services:
+  react-app:
+    build:
+      context: ./React
+      dockerfile: Dockerfile
+    ports:
+      - "3007:80"
+      - "3008:443"
+    environment:
+      - REACT_APP_GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+      - REACT_APP_BASE_URL=${BASE_URL}
+      - REACT_APP_GPT_API_KEY=${GPT_API_KEY}
+      - REACT_APP_NAME_SECRET_KEY=${NAME_SECRET_KEY}
+      - REACT_APP_GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
+    depends_on:
+      - express-app
+
+  express-app:
+    build:
+      context: ./Express
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+      - BASE_URL=${BASE_URL}
+      - GPT_API_KEY=${GPT_API_KEY}
+      - NAME_SECRET_KEY=${NAME_SECRET_KEY}
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
