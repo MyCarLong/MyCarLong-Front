@@ -1,0 +1,27 @@
+# 소스 제어 디렉토리
+.git
+.hg
+.svn
+
+# 의존성 디렉토리
+node_modules
+bower_components
+
+# 환경 설정 파일
+.env
+.env.local
+.env.development
+.env.production
+
+# 로그 파일
+*.log
+
+# 운영 체제 관련 파일
+Thumbs.db
+.DS_Store
+
+# 빌드 아티팩트 및 임시 파일
+dist
+build
+tmp
+temp
