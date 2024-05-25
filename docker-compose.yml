@@ -4,9 +4,12 @@ services:
     build:
       context: ./React
       dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
+    image: mycarlong-front_react-app:latest
     ports:
       - "3007:80"
-      - "3008:443"
+      - "3007:443"
     environment:
       - REACT_APP_GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
       - REACT_APP_BASE_URL=${BASE_URL}
@@ -20,6 +23,7 @@ services:
     build:
       context: ./Express
       dockerfile: Dockerfile
+    image: mycarlong-front_express-app:latest
     ports:
       - "5000:5000"
     environment:
