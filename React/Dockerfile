@@ -39,10 +39,10 @@ RUN mkdir -p /var/www/mycarlong
 RUN cp -r /app/build/* /var/www/mycarlong/
 
 # Nginx 설정 파일 복사
-COPY default /etc/nginx/sites-available/default
+COPY mycarlong.conf /etc/nginx/sites-available/default
 
 # 심볼릭 링크 생성
-RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
-
+RUN rm -f /etc/nginx/sites-enabled/mycarlong.conf && \
+  ln -s /etc/nginx/sites-available/mycarlong.conf /etc/nginx/sites-enabled/
 # Nginx 실행
 CMD ["nginx", "-g", "daemon off;"]

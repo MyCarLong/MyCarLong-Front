@@ -47,11 +47,16 @@ jobs:
 
       - name: Set environment variables from GitHub Secrets
         run: |
-          echo "REACT_APP_GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> React/.env
-          echo "REACT_APP_BASE_URL=${{ secrets.BASE_URL }}" >> React/.env
-          echo "REACT_APP_GPT_API_KEY=${{ secrets.GPT_API_KEY }}" >> React/.env
-          echo "REACT_APP_NAME_SECRET_KEY=${{ secrets.NAME_SECRET_KEY }}" >> React/.env
-          echo "REACT_APP_GOOGLE_APPLICATION_CREDENTIALS='${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'" >> React/.env
+          echo "REACT_APP_GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> .env
+          echo "REACT_APP_BASE_URL=${{ secrets.BASE_URL }}" >> .env
+          echo "REACT_APP_GPT_API_KEY=${{ secrets.GPT_API_KEY }}" >> .env
+          echo "REACT_APP_NAME_SECRET_KEY=${{ secrets.NAME_SECRET_KEY }}" >> .env
+          echo "REACT_APP_GOOGLE_APPLICATION_CREDENTIALS='${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'" >> .env
+          echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> .env
+          echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
+          echo "GPT_API_KEY=${{ secrets.GPT_API_KEY }}" >> .env
+          echo "NAME_SECRET_KEY=${{ secrets.NAME_SECRET_KEY }}" >> .env
+          echo "GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" >> .env
 
       - name: Deploy to EC2
         env:
@@ -61,6 +66,7 @@ jobs:
           NAME_SECRET_KEY: ${{ secrets.NAME_SECRET_KEY }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
+          scp -o StrictHostKeyChecking=no -i /tmp/ssh_key .env ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/MyCarLong-Front/.env
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             if [ -d "/home/ubuntu/MyCarLong-Front/.git" ]; then
               cd /home/ubuntu/MyCarLong-Front
@@ -79,6 +85,10 @@ jobs:
         if: success()
         run: |
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            echo "Removing .env file..."
+            rm -f /home/ubuntu/MyCarLong-Front/.env
+            echo "Cleanup complete."
+          EOF
           rm -f /tmp/ssh_key
 
       - name: Cleanup on failure

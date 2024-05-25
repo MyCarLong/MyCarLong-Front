@@ -33,7 +33,7 @@ const VehicleContent = ({ activeNav }) => {
     //     case '/vehicledetail':
     //         content = <h1>AI차량제원</h1>;
     //         break;
-    //     default:
+    //     mycarlong.conf:
     //         content = <h1>모두의차고</h1>;
     // }
 

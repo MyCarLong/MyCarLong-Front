@@ -9,6 +9,8 @@ services:
     image: mycarlong-front_react-app:latest
     ports:
       - "3007:80"
+    env_file:
+      - .env
     environment:
       - REACT_APP_GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
       - REACT_APP_BASE_URL=${BASE_URL}
@@ -17,6 +19,8 @@ services:
       - REACT_APP_GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
     depends_on:
       - express-app
+    networks:
+      - mycarlong_network
 
   express-app:
     build:
@@ -25,9 +29,17 @@ services:
     image: mycarlong-front_express-app:latest
     ports:
       - "5000:5000"
+    env_file:
+      - .env
     environment:
       - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
       - BASE_URL=${BASE_URL}
       - GPT_API_KEY=${GPT_API_KEY}
       - NAME_SECRET_KEY=${NAME_SECRET_KEY}
       - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
+    networks:
+      - mycarlong_network
+
+networks:
+  mycarlong_network:
+    driver: bridge
