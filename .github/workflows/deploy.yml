@@ -18,6 +18,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Add SSH key
+        run: |
+          echo "${{ secrets.EC2_SSH_PRIVATE }}" > /tmp/ssh_key
+          chmod 600 /tmp/ssh_key
+
       - name: Install dependencies for both React and Express
         run: |
           cd React && npm install
@@ -31,11 +36,12 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096  # 메모리 할당 한도를 4GB로 설정
           GENERATE_SOURCEMAP: false  # 소스 맵 생성을 비활성화
+          CI: false  # CI 환경 변수를 false로 설정
         run: |
           cd React
           echo "Memory usage before build:"
           free -m
-          npm run build  # npm run build 명령어 실행
+          CI=false npm run build  # npm run build 명령어 실행
           echo "Memory usage after build:"
           free -m
 
@@ -46,11 +52,6 @@ jobs:
           echo "REACT_APP_GPT_API_KEY=${{ secrets.GPT_API_KEY }}" >> React/.env
           echo "REACT_APP_NAME_SECRET_KEY=${{ secrets.NAME_SECRET_KEY }}" >> React/.env
           echo "REACT_APP_GOOGLE_APPLICATION_CREDENTIALS='${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'" >> React/.env
-
-      - name: Add SSH key
-        run: |
-          echo "${{ secrets.EC2_SSH_PRIVATE }}" > /tmp/ssh_key
-          chmod 600 /tmp/ssh_key
 
       - name: Deploy to EC2
         env:
@@ -74,12 +75,12 @@ jobs:
             echo "Deployment complete."
           EOF
 
-      - name: Cleanup
+      - name: Cleanup on success
         if: success()
         run: |
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             echo "Cleaning up unused Docker resources and snaps..."
-            docker system prune -a -f --volumes
+            sudo docker system prune -a -f --volumes
             sudo bash -c '
               snap list --all | awk '/disabled/{print \$1, \$3}' | while read snapname revision; do
                 echo "Removing \$snapname revision \$revision"
@@ -88,13 +89,14 @@ jobs:
             '
             echo "Cleanup complete."
           EOF
+          rm -f /tmp/ssh_key
 
       - name: Cleanup on failure
         if: failure()
         run: |
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             echo "Cleaning up due to build failure..."
-            docker system prune -a -f --volumes
+            sudo docker system prune -a -f --volumes
             sudo rm -rf /home/ubuntu/.cache/*
             sudo bash -c '
               snap list --all | awk '/disabled/{print \$1, \$3}' | while read snapname revision; do
@@ -104,3 +106,4 @@ jobs:
             '
             echo "Cleanup complete."
           EOF
+          rm -f /tmp/ssh_key
