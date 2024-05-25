@@ -25,7 +25,8 @@ jobs:
 
       - name: Build the React application
         run: |
-          cd React && npm run build
+          cd React
+          CI=false npm run build  # CI 환경 변수를 false로 설정하여 경고를 오류로 처리하지 않음
 
       - name: Set environment variables from GitHub Secrets
         run: |
