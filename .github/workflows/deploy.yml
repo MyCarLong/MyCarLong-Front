@@ -86,6 +86,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             echo "Cleaning up due to build failure..."
+            sudo docker stop $(sudo docker ps -q) || true
+            sudo docker rm $(sudo docker ps -aq) || true
             sudo docker system prune -a -f --volumes
             sudo rm -rf /home/ubuntu/.cache/*
             sudo bash -c '
