@@ -1,4 +1,0 @@
-[submodule "envRepo"]
-	path = envRepo
-	url = https://github.com/MyCarLong/envRepo.git
-    branch = deploy

@@ -7,7 +7,8 @@
 
 envRepo/
 focal-time-421105-cf8b5143fae8.json
-
+**/node_modules
+**/node_modules/**
 
 # testing
 /coverage
@@ -35,3 +36,5 @@ mycarlong-back/
 =======
 oauthkey.properties
 >>>>>>> e425f9f (save)
+
+.idea/
