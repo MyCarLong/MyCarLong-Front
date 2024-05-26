@@ -7,8 +7,10 @@
 
 envRepo/
 focal-time-421105-cf8b5143fae8.json
+ft4c.txt
 **/node_modules
 **/node_modules/**
+
 
 # testing
 /coverage
