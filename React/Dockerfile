@@ -51,9 +51,8 @@ COPY --from=build /app/build /var/www/mycarlong
 #RUN rm /etc/nginx/conf.d/default.conf
 #RUN rm /etc/nginx/conf.d/default
 RUN #rm /etc/nginx/sites-available/default.conf
-RUN rm /etc/nginx/sites-available/default
-RUN rm /etc/nginx/conf.d/*.conf
-
+RUN rm -f /etc/nginx/sites-available/default
+RUN rm -f /etc/nginx/conf.d/*.conf
 
 # Nginx 설정 파일 복사
 #COPY ./mycarlong.conf /etc/nginx/conf.d/mycarlong.conf
