@@ -41,7 +41,7 @@ RUN mkdir -p /var/www/mycarlong
 #RUN cp -r /app/build/* /var/www/mycarlong/
 COPY --from=build /app/build /var/www/mycarlong
 
-# 기본 설정 파일 삭제
+# 기본 설정 파일 삭제#
 #RUN rm /etc/nginx/conf.d/default.conf
 #RUN rm /etc/nginx/conf.d/default
 RUN rm /etc/nginx/sites-available/default.conf
