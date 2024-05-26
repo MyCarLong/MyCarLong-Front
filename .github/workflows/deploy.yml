@@ -88,13 +88,13 @@ jobs:
           NAME_SECRET_KEY: ${{ secrets.NAME_SECRET_KEY }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
-          scp -o StrictHostKeyChecking=no -i /tmp/ssh_key .env ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/root/.env
+          scp -o StrictHostKeyChecking=no -i /tmp/ssh_key .env ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/.env
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             if [ -d "/home/ubuntu/MyCarLong-Front" ]; then
               rm -rf /home/ubuntu/MyCarLong-Front
             fi
             git clone --branch release https://github.com/MyCarLong/MyCarLong-Front.git /home/ubuntu/MyCarLong-Front
-            cp /root/.env /home/ubuntu/MyCarLong-Front/.env
+            cp /home/ubuntu/.env /home/ubuntu/MyCarLong-Front/.env
             cd /home/ubuntu/MyCarLong-Front
             docker-compose down
             docker-compose build --no-cache  --build-arg buildno=${{ github.run_number }} --build-arg gitcommithash=${{ github.sha }} --build-arg gitcommitmessage="${{ steps.commit.outputs.message }}"
