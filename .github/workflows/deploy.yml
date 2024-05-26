@@ -31,6 +31,21 @@ jobs:
       - name: Adjust Swappiness
         run: |
           sudo sysctl vm.swappiness=80
+      #Git허브 IP 주소 획득 , 인바운드 규칙 임시 추가
+      - name: Get Github action IP
+        id: ip
+        uses: haythem/public-ip@v1.2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.EC2_IAM_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.EC2_IAM_SECRET_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Add Github Actions IP to Security group
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.EC2_SE_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
       - name: Build the React application
         env:
@@ -79,6 +94,14 @@ jobs:
             echo "Deployment complete."
           EOF
 
+      - name: Remove Github Actions IP from security group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.EC2_SE_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.EC2_IAM_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.EC2_IAM_SECRET_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.EC2_REGION }}
+
       - name: Cleanup on success
         if: success()
         run: |
@@ -88,6 +111,7 @@ jobs:
             echo "Cleanup complete."
           EOF
           rm -f /tmp/ssh_key
+
 
       - name: Cleanup on failure
         if: failure()
