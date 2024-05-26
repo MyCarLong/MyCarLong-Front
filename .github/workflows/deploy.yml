@@ -72,18 +72,14 @@ jobs:
           NAME_SECRET_KEY: ${{ secrets.NAME_SECRET_KEY }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key -t ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          scp -o StrictHostKeyChecking=no -i /tmp/ssh_key .env ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/MyCarLong-Front/.env
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             if [ -d "/home/ubuntu/MyCarLong-Front" ]; then
               rm -rf /home/ubuntu/MyCarLong-Front
             fi
             git clone --branch release https://github.com/MyCarLong/MyCarLong-Front.git /home/ubuntu/MyCarLong-Front
             cd /home/ubuntu/MyCarLong-Front
             docker-compose down
-            echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> .env
-            echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
-            echo "GPT_API_KEY=${{ secrets.GPT_API_KEY }}" >> .env
-            echo "NAME_SECRET_KEY=${{ secrets.NAME_SECRET_KEY }}" >> .env
-            echo "GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" >> .env
             docker-compose build --no-cache
             docker-compose up -d
             echo "Deployment complete."
