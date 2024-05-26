@@ -54,6 +54,18 @@ jobs:
       - name: Get the commit message
         id: commit
         run: echo "::set-output name=message::$(git log --format=%B -n 1)"
+      - name: Create .env file
+        run: |
+          echo "REACT_APP_GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> .env
+          echo "REACT_APP_BASE_URL=${{ secrets.BASE_URL }}" >> .env
+          echo "REACT_APP_GPT_API_KEY=${{ secrets.GPT_API_KEY }}" >> .env
+          echo "REACT_APP_NAME_SECRET_KEY=${{ secrets.NAME_SECRET_KEY }}" >> .env
+          echo "REACT_APP_GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" >> .env
+          echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> .env
+          echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
+          echo "GPT_API_KEY=${{ secrets.GPT_API_KEY }}" >> .env
+          echo "NAME_SECRET_KEY=${{ secrets.NAME_SECRET_KEY }}" >> .env
+          echo "GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" >> .env
 
       - name: Build the React application
         env:
