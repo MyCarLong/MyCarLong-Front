@@ -1,8 +1,14 @@
 # 베이스 이미지로 Ubuntu 24.04 사용
 FROM ubuntu:24.04
+LABEL authors="KGH"
+ARG buildno
+ARG gitcommithash
+
+RUN echo "Build number: $buildno"
+RUN echo "Based on commit: $gitcommithash"
 
 # Node.js 설치 (이미 설치된 경우 스킵)
-FROM NODE:20-alpine as build
+FROM node:20-alpine as build
 #RUN apt-get update && apt-get install -y \
 #  curl \
 #  gnupg && \
@@ -26,7 +32,7 @@ COPY . .
 
 # 빌드 실행
 RUN npm run build
-LABEL authors="KGH"
+
 
 FROM nginx:stable-alpine
 # Nginx 설치

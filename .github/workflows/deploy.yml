@@ -51,6 +51,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.EC2_IAM_SECRET_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.EC2_REGION }}
 
+      - name: Get the commit message
+        id: commit
+        run: echo "::set-output name=message::$(git log --format=%B -n 1)"
+
       - name: Build the React application
         env:
           NODE_OPTIONS: --max_old_space_size=4096  # 메모리 할당 한도를 4GB로 설정
@@ -80,7 +84,7 @@ jobs:
             git clone --branch release https://github.com/MyCarLong/MyCarLong-Front.git /home/ubuntu/MyCarLong-Front
             cd /home/ubuntu/MyCarLong-Front
             docker-compose down
-            docker-compose build --no-cache
+            docker-compose build --no-cache  --build-arg buildno=${{ github.run_number }} --build-arg gitcommithash=${{ github.sha }} --build-arg gitcommitmessage="${{ steps.commit.outputs.message }}"
             docker-compose up -d
             echo "Deployment complete."
           EOF

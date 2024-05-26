@@ -1,8 +1,13 @@
 # 베이스 이미지로 Ubuntu 24.04 사용
 FROM ubuntu:24.04
 LABEL authors="KGH"
+ARG buildno
+ARG gitcommithash
 
-FROM NODE:20-alpine as build
+RUN echo "Build number: $buildno"
+RUN echo "Based on commit: $gitcommithash"
+
+FROM node:20-alpine as build
 # 필요한 패키지 설치 및 Node.js 설치 (이미 설치된 경우 스킵)
 #RUN apt-get update && apt-get install -y \
 #  curl \
