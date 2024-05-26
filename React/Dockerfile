@@ -57,10 +57,13 @@ RUN rm -f /etc/nginx/conf.d/*.conf
 # Nginx 설정 파일 복사
 #COPY ./mycarlong.conf /etc/nginx/conf.d/mycarlong.conf
 COPY nginx/mycarlong.conf /etc/nginx/conf.d
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 #COPY mycarlong.conf /etc/nginx/conf.d/mycarlong.conf
 #COPY mycarlong.conf /etc/nginx/conf.d/
 
 EXPOSE 80
 
-# Nginx 실행
-CMD ["nginx", "-g", "daemon off;"]
+#nginx 실행하기
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+CMD ["/start.sh"]

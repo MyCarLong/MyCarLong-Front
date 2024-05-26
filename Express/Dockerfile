@@ -26,6 +26,7 @@ COPY package*.json ./
 
 # 의존성 설치
 RUN npm install
+RUN npm install -g pm2
 
 # 앱 소스 복사
 COPY . .
