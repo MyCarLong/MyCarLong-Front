@@ -11,7 +11,7 @@ FROM NODE:20-alpine as build
 #  apt-get install -y nodejs && \
 #  (npm -v | grep 10.2.4 || npm install -g npm@10.2.4 pm2) && \
 #  apt-get clean && \
-#  rm -rf /var/lib/apt/lists/*
+#  rm -rf /var/lib/apt/lists/*#
 
 # 작업 디렉토리 설정
 WORKDIR /app
