@@ -1,70 +1,28 @@
-# Getting Started with Create React App
+# 🚗 마카롱에 오신 것을 환영합니다
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+마카롱은 자동차 소유자와 구매 예정자를 위한 AI 기반의 편리한 서비스를 제공합니다. 사용자들은 마카롱을 이용해 현재 위치에서 1km 이내의 주유소, 서비스 센터, 주차장, 세차장 등 자동차 관련 시설을 손쉽게 찾을 수 있습니다. AI 챗봇을 활용해 자동차 관련 질문에 신속하고 정확한 답변을 받으며, 다양한 차량의 제원과 성능을 조회하여 정보 기반 구매 결정을 지원합니다. 또한, 사용자들이 경험과 정보를 공유할 수 있는 커뮤니티 기능도 제공됩니다.
 
-## Available Scripts
+## 🌟 주요 기능
 
-In the project directory, you can run:
+### 🔍 주변 시설 검색
+마카롱을 통해 사용자들은 현재 위치 반경 1km 이내의 주유소, 서비스 센터, 주차장, 세차장 등과 같은 자동차 관련 시설을 손쉽게 찾아볼 수 있습니다. 이를 통해 긴 여정을 떠날 때나 긴급한 상황에서 필요한 시설을 빠르게 찾을 수 있습니다.
 
-### `npm start`
+### 🤖 AI 챗봇 기능
+마카롱에는 AI 챗봇 기능이 탑재되어 있습니다. 사용자들은 어떠한 자동차 관련 질문이든지 AI 챗봇에게 물어볼 수 있습니다. 챗봇은 신속하고 정확한 답변을 제공하여 사용자들의 궁금증을 해소해 줍니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🏎️ 자동차 커뮤니티
+마카롱의 커뮤니티 기능은 사용자들이 자동차 관련 경험과 정보를 서로 공유할 수 있는 공간을 제공합니다. 커뮤니티 공간인 **모두의차고**에서는 차량 유지관리 팁, 추천 서비스 센터, 주행 경험 등 다양한 주제로 활발한 토론이 이루어집니다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 📊 자동차 제원 조회
+자동차 구매를 고려하는 사용자들은 마카롱을 활용하여 다양한 차량의 상세 제원을 쉽게 확인할 수 있습니다. AI가 제공하는 정밀한 성능 정보를 통해, 사용자는 보다 깊이 있는 선택을 할 수 있습니다.
+<!--
+## 🚀 시작하기
 
-### `npm test`
+마카롱을 사용하여 자동차 관련 정보를 손쉽게 찾아보세요:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. **🔍 주변 시설 검색**: 현재 위치를 기반으로 가까운 주유소, 서비스 센터, 주차장, 세차장 등을 찾아보세요.
+2. **🤖 AI 챗봇 사용**: AI 챗봇에게 자동차 관련 질문을 물어보세요. 신속하고 정확한 답변을 받을 수 있습니다.
+3. **🏎️ 커뮤니티 참여**: **모두의차고** 커뮤니티에서 다른 사용자들과 경험과 정보를 공유해보세요.
+4. **📊 자동차 제원 조회**: 다양한 차량의 상세 제원과 성능 정보를 확인해보세요.
+-->
+마카롱과 함께 더 편리하고 스마트한 자동차 생활을 경험해 보세요!
